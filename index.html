@@ -78,97 +78,55 @@
       <section class="board">
         <!-- Pendências -->
 
-        <div class="column">
+        <div class="column" data-status="pending">
           <div class="column-header">
             <div class="column-title">
               <h3>Pendências</h3>
 
-              <span class="task-count danger"> 1 </span>
+              <span class="task-count danger"></span>
             </div>
-
-            <button class="add-task">+</button>
           </div>
-
           <div class="task-list">
-            <div class="card priority-high">
-              <span class="badge priority-high">Alta</span>
-
-              <h4>Produto: 54608</h4>
-
-              <div class="card-footer">
-                <span class="card-date"> 📅 04 Ago </span>
-
-                <div class="avatar">CA</div>
-              </div>
-            </div>
           </div>
         </div>
 
         <!-- Pronto -->
 
-        <div class="column">
+        <div class="column" data-status="ready">
           <div class="column-header">
             <div class="column-title">
               <h3>Pronto</h3>
 
-              <span class="task-count warning"> 1 </span>
+              <span class="task-count warning"></span>
             </div>
-
-            <button class="add-task">+</button>
           </div>
 
           <div class="task-list">
-            <div class="card priority-medium">
-              <span class="badge priority-medium">Média</span>
-
-              <h4>Produto: 465543</h4>
-
-              <div class="card-footer">
-                <span class="card-date"> 📅 06 Ago </span>
-
-                <div class="avatar">CA</div>
-              </div>
-            </div>
+           
           </div>
         </div>
 
         <!-- Em andamento -->
 
-        <div class="column">
+        <div class="column" data-status="progress">
           <div class="column-header">
             <div class="column-title">
               <h3>Em Andamento</h3>
-
-              <span class="task-count info"> 1 </span>
+              <span class="task-count info"></span>
             </div>
-
-            <button class="add-task">+</button>
           </div>
-
           <div class="task-list">
-            <div class="card priority-low">
-              <span class="badge priority-low">Baixa</span>
-
-              <h4>Produto: 78123</h4>
-
-              <div class="card-footer">
-                <span class="card-date"> 📅 08 Ago </span>
-
-                <div class="avatar">CA</div>
-              </div>
-            </div>
           </div>
         </div>
 
         <!-- Revisão -->
 
-        <div class="column">
+        <div class="column" data-status="review">
           <div class="column-header">
             <div class="column-title">
               <h3>Revisão</h3>
+              <span class="task-count purple"></span>
             </div>
-
-            <button class="add-task">+</button>
           </div>
 
           <div class="task-list"></div>
@@ -176,19 +134,19 @@
 
         <!-- Concluído -->
 
-        <div class="column">
+        <div class="column" data-status="completed">
           <div class="column-header">
             <div class="column-title">
               <h3>Concluído</h3>
+              <span class="task-count success"></span>
             </div>
-
-            <button class="add-task">+</button>
           </div>
 
           <div class="task-list"></div>
         </div>
       </section>
       <div id="modal-container"></div>
+      <div id="details-modal-container"></div>
     </main>
     <script src="index.js"></script>
   </body>
