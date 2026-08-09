@@ -1,8 +1,9 @@
-# FlowTask 
+# Klygen
 
-FlowTask é um projeto de gerenciamento de tarefas inspirado em ferramentas como Trello e Jira. 
+Klygen é um projeto de gerenciamento de tarefas inspirado em ferramentas como Trello e Jira.
 
-## 📳 Tecnologias 
+## 📳 Tecnologias
+
 - HTML5
 - CSS3
 - JavaScript (Em desenvolvimento)

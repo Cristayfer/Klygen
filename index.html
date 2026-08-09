@@ -1,268 +1,195 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klygen</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowTask</title>
+    <link rel="stylesheet" href="style.css" />
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
-<body>
-
+  <body>
     <!-- SIDEBAR -->
 
     <aside class="sidebar">
-
         <div class="logo">
-            <h2>FlowTask</h2>
+          <svg
+            class="logo-icon"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Klygen"
+          >
+            <polygon
+            points="35,27 124,27 200,103 124,103 85,65"
+            fill="#1769E8"
+            />
+            <polygon
+            points="35,27 85,70 85,137 35,180"
+            fill="#16D6C8"
+            />
+             <polygon
+            points="35,180 124,180 200,103 124,103 85,137"
+            fill="#6930F2"
+            />
+          </svg>
+
+          <h2>KLYGEN</h2>
         </div>
+      </div>
 
-        <nav>
-
-            <ul>
-                <li><a href="equipe">Equipe</a></li>
-                <li><a href="calculadora.html">Calculadora Fiscal</a></li>
-                <li><a href="solicitacoes.html">Solicitações</a></li>
-                <li><a href="configuracoes">Configurações</a></li>
-            </ul>
-
-        </nav>
-
+      <nav>
+        <ul>
+          <li><a href="equipe">Equipe</a></li>
+          <li><a href="calculadora.html">Calculadora Fiscal</a></li>
+          <li><a href="solicitacoes.html">Solicitações</a></li>
+          <li><a href="configuracoes">Configurações</a></li>
+        </ul>
+      </nav>
     </aside>
 
     <!-- CONTEÚDO -->
 
     <main>
+      <!-- HEADER -->
 
-        <!-- HEADER -->
+      <header class="header">
+        <div class="search-box">
+          <span class="search-icon">🔍 </span>
+          <input type="text" placeholder="Pesquisar tarefas..." />
+        </div>
 
-        <header class="header">
+        <div class="header-right">
+          <button id="abrir" class="btn-add">+ Nova Tarefa</button>
 
-            <div class="search-box">
-                <span class="search-icon">🔍 </span>
-                <input
-                    type="text"
-                    placeholder="Pesquisar tarefas...">
+          <div class="user">CA</div>
+        </div>
+      </header>
 
+      <!-- KANBAN -->
+
+      <section class="board">
+        <!-- Pendências -->
+
+        <div class="column">
+          <div class="column-header">
+            <div class="column-title">
+              <h3>Pendências</h3>
+
+              <span class="task-count danger"> 1 </span>
             </div>
 
-            <div class="header-right">
+            <button class="add-task">+</button>
+          </div>
 
-                <button id="abrir" class="btn-add">
-                    + Nova Tarefa
-                </button>
-                
-                <div class="user">
-                    CA
-                </div>
+          <div class="task-list">
+            <div class="card priority-high">
+              <span class="badge priority-high">Alta</span>
 
+              <h4>Produto: 54608</h4>
+
+              <div class="card-footer">
+                <span class="card-date"> 📅 04 Ago </span>
+
+                <div class="avatar">CA</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pronto -->
+
+        <div class="column">
+          <div class="column-header">
+            <div class="column-title">
+              <h3>Pronto</h3>
+
+              <span class="task-count warning"> 1 </span>
             </div>
 
-        </header>
+            <button class="add-task">+</button>
+          </div>
 
-        <!-- KANBAN -->
+          <div class="task-list">
+            <div class="card priority-medium">
+              <span class="badge priority-medium">Média</span>
 
-        <section class="board">
+              <h4>Produto: 465543</h4>
 
-            <!-- Pendências -->
+              <div class="card-footer">
+                <span class="card-date"> 📅 06 Ago </span>
 
-            <div class="column">
+                <div class="avatar">CA</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                <div class="column-header">
+        <!-- Em andamento -->
 
-                    <div class="column-title">
+        <div class="column">
+          <div class="column-header">
+            <div class="column-title">
+              <h3>Em Andamento</h3>
 
-                        <h3>Pendências</h3>
-
-                        <span class="task-count danger">
-                            1
-                        </span>
-
-                    </div>
-
-                    <button class="add-task">+</button>
-
-                </div>
-
-                <div class="task-list">
-
-                    <div class="card priority-high">
-
-                        <span class="badge priority-high">Alta</span>
-
-                        <h4>
-                            Produto: 54608
-                        </h4>
-
-                        <div class="card-footer">
-
-                            <span class="card-date">
-                                📅 04 Ago
-                            </span>
-
-                            <div class="avatar">
-                                CA
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+              <span class="task-count info"> 1 </span>
             </div>
 
-            <!-- Pronto -->
+            <button class="add-task">+</button>
+          </div>
 
-            <div class="column">
+          <div class="task-list">
+            <div class="card priority-low">
+              <span class="badge priority-low">Baixa</span>
 
-                <div class="column-header">
+              <h4>Produto: 78123</h4>
 
-                    <div class="column-title">
+              <div class="card-footer">
+                <span class="card-date"> 📅 08 Ago </span>
 
-                        <h3>Pronto</h3>
+                <div class="avatar">CA</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                        <span class="task-count warning">
-                            1
-                        </span>
+        <!-- Revisão -->
 
-                    </div>
-
-                    <button class="add-task">+</button>
-
-                </div>
-
-                <div class="task-list">
-
-                    <div class="card priority-medium">
-
-                        <span class="badge priority-medium">Média</span>
-
-                        <h4>
-                            Produto: 465543
-                        </h4>
-
-                        <div class="card-footer">
-
-                            <span class="card-date">
-                                📅 06 Ago
-                            </span>
-
-                            <div class="avatar">
-                                CA
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+        <div class="column">
+          <div class="column-header">
+            <div class="column-title">
+              <h3>Revisão</h3>
             </div>
 
-            <!-- Em andamento -->
+            <button class="add-task">+</button>
+          </div>
 
-            <div class="column">
+          <div class="task-list"></div>
+        </div>
 
-                <div class="column-header">
+        <!-- Concluído -->
 
-                    <div class="column-title">
-
-                        <h3>Em Andamento</h3>
-
-                        <span class="task-count info">
-                            1
-                        </span>
-
-                    </div>
-
-                    <button class="add-task">+</button>
-
-                </div>
-
-                <div class="task-list">
-
-                    <div class="card priority-low">
-
-                        <span class="badge priority-low">Baixa</span>
-
-                        <h4>
-                            Produto: 78123
-                        </h4>
-
-                        <div class="card-footer">
-
-                            <span class="card-date">
-                                📅 08 Ago
-                            </span>
-
-                            <div class="avatar">
-                                CA
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+        <div class="column">
+          <div class="column-header">
+            <div class="column-title">
+              <h3>Concluído</h3>
             </div>
 
-            <!-- Revisão -->
+            <button class="add-task">+</button>
+          </div>
 
-            <div class="column">
-
-                <div class="column-header">
-
-                    <div class="column-title">
-
-                        <h3>Revisão</h3>
-
-                    </div>
-
-                    <button class="add-task">+</button>
-
-                </div>
-
-                <div class="task-list">
-
-                </div>
-
-            </div>
-
-            <!-- Concluído -->
-
-            <div class="column">
-
-                <div class="column-header">
-
-                    <div class="column-title">
-
-                        <h3>Concluído</h3>
-
-                    </div>
-
-                    <button class="add-task">+</button>
-
-                </div>
-
-                <div class="task-list">
-
-                </div>
-
-            </div>
-
-        </section>
-        <div id="modal-container"></div>
+          <div class="task-list"></div>
+        </div>
+      </section>
+      <div id="modal-container"></div>
     </main>
-<script src="index.js"></script>
-</body>
-
+    <script src="index.js"></script>
+  </body>
 </html>

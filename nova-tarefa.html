@@ -1,110 +1,68 @@
 <div class="modal-overlay" id="modal-tarefa">
-    <div class="modal-content">
-        <div class="task-form-header">
-            <div>
-                <h1>Nova Chamado</h1>
-                <p>Preencha todos os campos para fazer a solicitação</p>
-            </div>
-            <button id="cancelar" class="btn-cancel">
-                Cancelar
-            </button>
-        </div>
-
-        <form id="task-form">
-            <div class="form-group">
-                <label for="titulo">
-                    Titulo
-                </label>
-                <input 
-                type="text"
-                id="titulo"
-                name="titulo"
-                placeholder="Produto:"
-                required
-                >
-            </div>
-            <div class="form-group">
-                <label for="descricao">
-                    Descrição
-                </label>
-                
-                <textarea
-                    id="descricao"
-                    name="descricao"
-                    Rows="4"
-                ></textarea>
-            </div>
-            <div class="form-group">
-                <label for="anexo">
-                    Anexo
-                </label>
-                <label class="file-upload" for="anexo">
-                    
-                        Selecionar Arquivo
-                    
-                    <input 
-                    type="file"
-                    id="anexo"
-                    name="anexo"
-                    accept=".png, .jpg, .jpeg, .pdf, .xlsx, .xls"
-                    multiple
-                    >
-                </label>
-                <small>
-                    Anexe um print ou pdf relacionados
-                </small>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="prioridade">
-                        Prioridade
-                    </label>
-                    <select name="prioridade" id="prioridade">
-                        <option value="high">
-                            Alta
-                        </option>
-                        <option value="medium">
-                            Media
-                        </option>
-                        <option value="low">
-                            Baixa
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="data">
-                        Data de solicitação
-                    </label>
-                    <input 
-                    type="date"
-                    id="data"
-                    name="data"
-                    readonly
-                    >
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="solicitante">
-                            Solicitante
-                        </label>
-                        <input
-                            type="text"
-                            id="solicitante"
-                            value="CA"
-                            readonly
-                        >
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button
-                    type="submit"
-                    class="btn-create"
-                    >
-                        Criar Solicitação
-                    </button>
-                </div>
-            </div>
-        </form>
+  <div class="modal-content">
+    <div class="task-form-header">
+      <div>
+        <h1>Novo Chamado</h1>
+        <p>Preencha todos os campos para fazer a solicitação</p>
+      </div>
+      <button id="cancelar" class="btn-cancel">Cancelar</button>
     </div>
+
+    <form id="task-form">
+      <div class="form-group">
+        <label for="titulo"> Titulo </label>
+        <input
+          type="text"
+          id="titulo"
+          name="titulo"
+          placeholder="Produto:"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="descricao"> Descrição </label>
+
+        <textarea id="descricao" name="descricao" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="anexo"> Anexo </label>
+        <label class="file-upload" for="anexo">
+          Selecionar Arquivo
+
+          <input
+            type="file"
+            id="anexo"
+            name="anexo"
+            accept=".png, .jpg, .jpeg, .pdf, .xlsx, .xls"
+            multiple
+          />
+        </label>
+        <small> Anexe um print ou pdf relacionados </small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="prioridade"> Prioridade </label>
+          <select name="prioridade" id="prioridade">
+            <option value="high">Alta</option>
+            <option value="medium">Media</option>
+            <option value="low">Baixa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="data"> Data de solicitação </label>
+          <input type="date" id="data" name="data" readonly />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="solicitante"> Solicitante </label>
+            <input type="text" id="solicitante" value="CA" readonly />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-create">Criar Solicitação</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
