@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Solicitações - Klygen</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/solicitacoes.css') }}"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- ============================= -->
+    <!-- SIDEBAR -->
+    <!-- ============================= -->
+
+    <aside class="sidebar">
+      <div class="logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 200 200"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-label="Klygen"
+          >
+            <polygon
+            points="35,27 124,27 200,103 124,103 85,65"
+            fill="#1769E8"
+            />
+            <polygon
+            points="35,27 85,70 85,137 35,180"
+            fill="#16D6C8"
+            />
+             <polygon
+            points="35,180 124,180 200,103 124,103 85,137"
+            fill="#6930F2"
+            />
+          </svg>
+           <h2>KLYGEN</h2>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="/"> Início </a>
+          </li>
+
+          <li>
+            <a href="/equipe"> Equipe </a>
+          </li>
+
+          <li>
+            <a href="/calculadora"> Calculadora Fiscal </a>
+          </li>
+
+          <li class="active">
+            <a href="/solicitacoes"> Solicitações </a>
+          </li>
+
+          <li>
+            <a href="/configuracoes"> Configurações </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ============================= -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ============================= -->
+
+    <main>
+      <section class="solicitacoes-page">
+        <!-- ============================= -->
+        <!-- CABEÇALHO -->
+        <!-- ============================= -->
+
+        <div class="solicitacoes-header">
+          <button class="btn-voltar" onclick="window.location.href = '/'">
+            ← Voltar
+          </button>
+
+          <div class="solicitacoes-header-info">
+            <span class="solicitacoes-label"> HISTÓRICO </span>
+
+            <h1>Solicitações</h1>
+
+            <p>Histórico de solicitações concluídas.</p>
+          </div>
+
+          <div class="solicitacoes-summary">
+            <span id="total-solicitacoes"> 0 </span>
+
+            <small> Solicitações </small>
+          </div>
+        </div>
+
+        <!-- ============================= -->
+        <!-- CONTEÚDO -->
+        <!-- ============================= -->
+
+        <div class="solicitacoes-content">
+          <!-- ============================= -->
+          <!-- TOOLBAR -->
+          <!-- ============================= -->
+
+          <div class="solicitacoes-toolbar">
+            <div>
+              <h2>Histórico de solicitações</h2>
+
+              <span id="ultima-atualizacao"> Carregando... </span>
+            </div>
+
+            <!-- ============================= -->
+            <!-- FILTROS -->
+            <!-- ============================= -->
+
+            <div class="solicitacoes-filtros">
+              <!-- BUSCA -->
+              <div class="busca-solicitacao">
+                <span> ⌕ </span>
+
+                <input
+                  type="text"
+                  id="busca-solicitacao"
+                  placeholder="Buscar solicitação..."
+                />
+              </div>
+
+              <!-- PRIORIDADE -->
+              <select id="filtro-prioridade">
+                <option value="all">Todas as prioridades</option>
+
+                <option value="high">Alta</option>
+
+                <option value="medium">Média</option>
+
+                <option value="low">Baixa</option>
+              </select>
+
+              <!-- DATA -->
+              <div class="busca-data">
+                <span> 📅 </span>
+
+                <input
+                  type="text"
+                  id="busca-data"
+                  placeholder="DD/MM/AAAA"
+                  maxlength="10"
+                  inputmode="numeric"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================= -->
+          <!-- LISTA -->
+          <!-- ============================= -->
+
+          <div id="lista-solicitacoes" class="solicitacoes-list">
+            <div class="solicitacoes-loading">Carregando solicitações...</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================= -->
+
+    <script src="{{ url_for('static', filename='js/solicitacoes.js') }}"></script>
+  </body>
+</html>
+```

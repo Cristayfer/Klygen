@@ -1,0 +1,9 @@
+.venv/
+klygen.db
+__pycache__/
+*.py[cod]
+.env
+.vscode/
+.DS_Store
+Thumbs.db
+

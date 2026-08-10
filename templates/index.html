@@ -1,11 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Klygen</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -49,7 +49,7 @@
         <ul>
           <li><a href="equipe">Equipe</a></li>
           <li><a href="calculadora.html">Calculadora Fiscal</a></li>
-          <li><a href="solicitacoes.html">Solicitações</a></li>
+          <li><a href="/solicitacoes">Solicitações</a></li>
           <li><a href="configuracoes">Configurações</a></li>
         </ul>
       </nav>
@@ -148,6 +148,6 @@
       <div id="modal-container"></div>
       <div id="details-modal-container"></div>
     </main>
-    <script src="index.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   </body>
 </html>

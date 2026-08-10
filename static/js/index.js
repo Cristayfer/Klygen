@@ -2,7 +2,7 @@ const abrir = document.getElementById("abrir");
 const modalContainer = document.getElementById("modal-container");
 
 abrir.addEventListener("click", async () => {
-  const resposta = await fetch("nova-tarefa.html");
+  const resposta = await fetch("/nova-tarefa");
   const html = await resposta.text();
 
   modalContainer.innerHTML = html;
@@ -22,7 +22,7 @@ abrir.addEventListener("click", async () => {
   });
 
   const formulario = document.getElementById("task-form");
-  formulario.addEventListener("submit", (event) => {
+  formulario.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const titulo = document.getElementById("titulo").value;
@@ -31,11 +31,56 @@ abrir.addEventListener("click", async () => {
     const data = document.getElementById("data").value;
     const solicitante = document.getElementById("solicitante").value;
     const arquivos = Array.from(document.getElementById("anexo").files);
+
+    const resposta = await fetch("/api/tarefas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        titulo: titulo,
+        descricao: descricao,
+        prioridade: prioridade,
+        data: data,
+        solicitante: solicitante,
+      }),
+    });
+
+    const resultado = await resposta.json();
+
+    console.log("RESPOSTA DO FLASK:", resultado);
+    console.log("CRIANDO CARD NO JAVASCRIPT");
     criarTarefa(titulo, descricao, prioridade, data, solicitante, arquivos);
 
     modalContainer.innerHTML = "";
   });
 });
+
+async function carregarTarefas() {
+  try {
+    const resposta = await fetch("/api/tarefas");
+    const resultado = await resposta.json();
+
+    console.log("TAREFAS DO BANCO:", resultado);
+    console.log("LISTA DE TAREFAS:", resultado.tarefas);
+
+    resultado.tarefas.forEach((tarefa) => {
+      criarTarefa(
+        tarefa.titulo,
+        tarefa.descricao,
+        tarefa.prioridade,
+        tarefa.data,
+        tarefa.solicitante,
+        [],
+        tarefa.id,
+        tarefa.status,
+        tarefa.responsavel,
+      );
+    });
+  } catch (erro) {
+    console.error("ERRO AO CARREGAR TAREFAS:", erro);
+  }
+}
 
 function criarTarefa(
   titulo,
@@ -44,14 +89,25 @@ function criarTarefa(
   data,
   solicitante,
   arquivos,
+  id = null,
+  status = "pending",
+  responsavel = "",
 ) {
-  const taskList = document.querySelector(".column .task-list");
+  const coluna = document.querySelector(`.column[data-status="${status}"]`);
+
+  if (!coluna) {
+    console.error("Coluna não encontrada:", status);
+    return;
+  }
+
+  const taskList = coluna.querySelector(".task-list");
 
   const card = document.createElement("div");
   card.classList.add("card", `priority-${prioridade}`);
 
-  card.dataset.status = "pending";
-  card.dataset.responsavel = "";
+  card.dataset.id = id;
+  card.dataset.status = status;
+  card.dataset.responsavel = responsavel;
 
   card.addEventListener("click", () => {
     abrirDetalhes(
@@ -103,6 +159,27 @@ function criarTarefa(
 
   taskList.appendChild(card);
   atualizarContadores();
+}
+
+async function atualizarStatusBanco(id, status, responsavel = "") {
+  try {
+    const resposta = await fetch(`/api/tarefas/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: status,
+        responsavel: responsavel,
+      }),
+    });
+
+    const resultado = await resposta.json();
+
+    console.log("STATUS ATUALIZADO NO BANCO:", resultado);
+  } catch (erro) {
+    console.error("ERRO AO ATUALIZAR STATUS:", erro);
+  }
 }
 
 function abrirDetalhes(
@@ -281,7 +358,7 @@ function abrirDetalhes(
   const assumir = document.getElementById("assumir-tarefa");
 
   if (assumir) {
-    assumir.addEventListener("click", () => {
+    assumir.addEventListener("click", async () => {
       const usuarioAtual = "CA";
 
       const colunaAndamento = document.querySelector(
@@ -298,6 +375,8 @@ function abrirDetalhes(
 
       colunaAndamento.appendChild(card);
 
+      await atualizarStatusBanco(card.dataset.id, "progress", usuarioAtual);
+
       atualizarContadores();
 
       detailsContainer.innerHTML = "";
@@ -307,7 +386,7 @@ function abrirDetalhes(
   const finalizar = document.getElementById("finalizar-tarefa");
 
   if (finalizar) {
-    finalizar.addEventListener("click", () => {
+    finalizar.addEventListener("click", async () => {
       const colunaPronto = document.querySelector(
         '.column[data-status="ready"]',
       );
@@ -328,6 +407,12 @@ function abrirDetalhes(
 
       listaPronto.appendChild(card);
 
+      await atualizarStatusBanco(
+        card.dataset.id,
+        "ready",
+        card.dataset.responsavel,
+      );
+
       atualizarContadores();
 
       detailsContainer.innerHTML = "";
@@ -337,7 +422,7 @@ function abrirDetalhes(
   const concluir = document.getElementById("concluir-tarefa");
 
   if (concluir) {
-    concluir.addEventListener("click", () => {
+    concluir.addEventListener("click", async () => {
       const colunaConcluido = document.querySelector(
         '.column[data-status="completed"]',
       );
@@ -358,6 +443,12 @@ function abrirDetalhes(
 
       listaConcluido.appendChild(card);
 
+      await atualizarStatusBanco(
+        card.dataset.id,
+        "completed",
+        card.dataset.responsavel,
+      );
+
       atualizarContadores();
 
       detailsContainer.innerHTML = "";
@@ -368,7 +459,7 @@ function abrirDetalhes(
   const revisar = document.getElementById("revisar-tarefa");
 
   if (revisar) {
-    revisar.addEventListener("click", () => {
+    revisar.addEventListener("click", async () => {
       const colunaRevisao = document.querySelector(
         '.column[data-status="review"]',
       );
@@ -389,6 +480,12 @@ function abrirDetalhes(
 
       listaRevisao.appendChild(card);
 
+      await atualizarStatusBanco(
+        card.dataset.id,
+        "review",
+        card.dataset.responsavel,
+      );
+
       atualizarContadores();
 
       detailsContainer.innerHTML = "";
@@ -398,7 +495,7 @@ function abrirDetalhes(
   const retomar = document.getElementById("retomar-tarefa");
 
   if (retomar) {
-    retomar.addEventListener("click", () => {
+    retomar.addEventListener("click", async () => {
       const colunaAndamento = document.querySelector(
         '.column[data-status="progress"] .task-list',
       );
@@ -411,6 +508,12 @@ function abrirDetalhes(
       card.dataset.status = "progress";
 
       colunaAndamento.appendChild(card);
+
+      await atualizarStatusBanco(
+        card.dataset.id,
+        "progress",
+        card.dataset.responsavel,
+      );
 
       atualizarContadores();
 
@@ -454,3 +557,4 @@ function formatarData(data) {
 
   return `${dia} ${meses[mes]}`;
 }
+carregarTarefas();
