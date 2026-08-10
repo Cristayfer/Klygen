@@ -15,6 +15,9 @@ Klygen é um projeto de gerenciamento de tarefas inspirado em ferramentas como T
 - Header
 - Board Kanban
 - Cards de tarefas
+- Banco de dados SQLite
+- API com Flask
+- Responsividade
 
 ## 🎯 Objetivo
 
@@ -24,6 +27,3 @@ Este projeto faz parte do meu portifólio de desenvolvimento e será evoluído c
 
 - Drag and Drop
 - Login de usuários
-- Banco de dados SQLite
-- API com Flask
-- Responsividade
