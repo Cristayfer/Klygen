@@ -301,6 +301,20 @@ main {
   border-radius: 4px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
+.details-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.details-state img {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 30px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 3px;
+}
 .priority {
   display: inline-block;
   padding: 4px 10px;

@@ -1,6 +1,13 @@
 const abrir = document.getElementById("abrir");
 const modalContainer = document.getElementById("modal-container");
 
+const bandeiras = {
+  MG: "/static/img/estados/mg.png",
+  BA: "/static/img/estados/ba.png",
+  PE: "/static/img/estados/pe.png",
+  ES: "/static/img/estados/es.png",
+};
+
 abrir.addEventListener("click", async () => {
   const resposta = await fetch("/nova-tarefa");
   const html = await resposta.text();
@@ -146,12 +153,6 @@ function criarTarefa(
 
   const dataFormatada = formatarData(data);
 
-  const bandeiras = {
-    MG: "/static/img/estados/mg.png",
-    BA: "/static/img/estados/ba.png",
-    PE: "/static/img/estados/pe.png",
-    ES: "/static/img/estados/es.png",
-  };
   const bandeiraEstado = bandeiras[estado];
 
   card.dataset.titulo = titulo;
@@ -300,7 +301,14 @@ function abrirDetalhes(
             <span>Prioridade</span>
             <strong>${nomePrioridade}</strong>
           </div>
+          <div class="info-item">
+              <span>Estado</span>
 
+          <div class="details-state">
+              <img src="${bandeiras[estado]}" alt="${estado}">
+              <strong>${estado}</strong>
+              </div>
+          </div>
           <div class="info-item">
             <span>Data de Solicitação</span>
             <strong>${data}</strong>
