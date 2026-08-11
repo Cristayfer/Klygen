@@ -46,16 +46,18 @@ def criar_tarefa():
             titulo,
             descricao,
             prioridade,
+            estado,
             data,
             solicitante,
             responsavel,
             status
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         dados["titulo"],
         dados["descricao"],
         dados["prioridade"],
+        dados["estado"],
         dados["data"],
         dados["solicitante"],
         "",

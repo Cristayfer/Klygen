@@ -18,6 +18,7 @@ def criar_banco():
             titulo TEXT NOT NULL,
             descricao TEXT,
             prioridade TEXT NOT NULL,
+            estado TEXT NOT NULL,
             data TEXT NOT NULL,
             solicitante TEXT NOT NULL,
             responsavel TEXT,

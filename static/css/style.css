@@ -6,7 +6,8 @@
 }
 body {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* ---------------- SIDEBAR ---------------- */
@@ -60,6 +61,7 @@ main {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 /* ---------------- HEADER ---------------- */
@@ -131,11 +133,11 @@ main {
 /* ---------------- KANBAN ---------------- */
 .board {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 5px;
-  width: 100%;
-  overflow-x: auto;
+  flex: 1;
+
+  gap: 20px;
+  min-height: 0;
+  overflow-x: hidden;
 }
 .column {
   background: #f3f4f6;
@@ -144,11 +146,13 @@ main {
   width: 260px;
   min-width: 260px;
   max-width: 260px;
-  height: calc(100vh - 170px);
+
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   box-sizing: border-box;
+  min-height: 0;
+  overflow: hidden;
 }
 .column-header {
   display: flex;
@@ -224,10 +228,15 @@ main {
 .task-list {
   margin-top: 18px;
   flex: 1;
+  min-height: 0;
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  min-width: 0;
+  gap: 10px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* ---------------- CARDS ---------------- */
@@ -235,8 +244,7 @@ main {
   background: white !important;
   padding: 10px;
   border-radius: 10px;
-  margin-top: -15px;
-  margin-bottom: 0;
+  margin: 0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   transition: 0.2s ease-in-out;
   cursor: pointer;
@@ -245,6 +253,9 @@ main {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+
+  /* impede os cards de serem espremidos */
+  flex-shrink: 0;
 }
 .card:hover {
   transform: translateY(-3px);
@@ -272,6 +283,23 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-top: 18px;
+}
+.card-state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-state {
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+}
+.card-state img {
+  width: 34px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 .priority {
   display: inline-block;
@@ -391,7 +419,7 @@ textarea {
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
 }
 

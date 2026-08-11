@@ -28,6 +28,7 @@ abrir.addEventListener("click", async () => {
     const titulo = document.getElementById("titulo").value;
     const descricao = document.getElementById("descricao").value;
     const prioridade = document.getElementById("prioridade").value;
+    const estado = document.getElementById("estado").value;
     const data = document.getElementById("data").value;
     const solicitante = document.getElementById("solicitante").value;
     const arquivos = Array.from(document.getElementById("anexo").files);
@@ -41,6 +42,7 @@ abrir.addEventListener("click", async () => {
         titulo: titulo,
         descricao: descricao,
         prioridade: prioridade,
+        estado: estado,
         data: data,
         solicitante: solicitante,
       }),
@@ -50,7 +52,15 @@ abrir.addEventListener("click", async () => {
 
     console.log("RESPOSTA DO FLASK:", resultado);
     console.log("CRIANDO CARD NO JAVASCRIPT");
-    criarTarefa(titulo, descricao, prioridade, data, solicitante, arquivos);
+    criarTarefa(
+      titulo,
+      descricao,
+      prioridade,
+      data,
+      estado,
+      solicitante,
+      arquivos,
+    );
 
     modalContainer.innerHTML = "";
   });
@@ -70,6 +80,7 @@ async function carregarTarefas() {
         tarefa.descricao,
         tarefa.prioridade,
         tarefa.data,
+        tarefa.estado,
         tarefa.solicitante,
         [],
         tarefa.id,
@@ -87,6 +98,7 @@ function criarTarefa(
   descricao,
   prioridade,
   data,
+  estado,
   solicitante,
   arquivos,
   id = null,
@@ -115,6 +127,7 @@ function criarTarefa(
       titulo,
       descricao,
       prioridade,
+      estado,
       data,
       solicitante,
       arquivos,
@@ -133,10 +146,19 @@ function criarTarefa(
 
   const dataFormatada = formatarData(data);
 
+  const bandeiras = {
+    MG: "/static/img/estados/mg.png",
+    BA: "/static/img/estados/ba.png",
+    PE: "/static/img/estados/pe.png",
+    ES: "/static/img/estados/es.png",
+  };
+  const bandeiraEstado = bandeiras[estado];
+
   card.dataset.titulo = titulo;
   card.dataset.descricao = descricao;
   card.dataset.prioridade = prioridade;
   card.dataset.data = data;
+  card.dataset.estado = estado;
   card.dataset.solicitante = solicitante;
 
   card.innerHTML = `
@@ -150,7 +172,10 @@ function criarTarefa(
             <span class="card-date">
                 📅 ${dataFormatada}
             </span>
-            
+            <div class="card-state">
+              <img src="${bandeiraEstado}" alt="${estado}">
+              <span>${estado}</span>
+            </div>
             <div class="avatar">
                 ${solicitante}
             </div>
@@ -187,6 +212,7 @@ function abrirDetalhes(
   titulo,
   descricao,
   prioridade,
+  estado,
   data,
   solicitante,
   arquivos,
