@@ -12,7 +12,12 @@ body {
 
 .sidebar {
   width: 250px;
-  background: #030d2c;
+  background: linear-gradient(
+        to bottom,
+        #151592 0%,
+        #05054b 50%,
+        #043f52 100%
+    );
   color: white;
   padding: 30px;
 }
@@ -107,13 +112,18 @@ main {
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 .btn-add {
-  background: #030d2c;
+  background: linear-gradient(
+        to bottom,
+        #151592 0%,
+        #05054b 50%,
+        #043f52 100%
+    );
   color: white;
   border: none;
   padding: 12px 20px;
   border-radius: 10px;
   cursor: pointer;
-  transition: 2s ease;
+  transition: 0.2s ease;
 }
 .user {
   font-weight: bold;
@@ -140,10 +150,9 @@ main {
   background: #f3f4f6;
   border-radius: 18px;
   padding: 5px;
-  width: 260px;
-  min-width: 260px;
+  width: 245px;
+  min-width: 245px;
   max-width: 260px;
-
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -540,14 +549,20 @@ textarea {
 }
 
 .btn-create {
-  background: #030d2c;
+  background: linear-gradient(
+        to bottom,
+        #151592 0%,
+        #05054b 50%,
+        #043f52 100%
+    );
   color: white;
   border: none;
   padding: 12px 20px;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
   transition: 0.2s ease;
+  height: 60px;
 }
 
 .btn-create:hover {
@@ -567,6 +582,7 @@ textarea {
 
 .btn-cancel:hover {
   background: #f3f4f6;
+  transition: 0.2s ease;
 }
 
 .file-upload {
@@ -790,7 +806,12 @@ textarea {
   border: none;
   padding: 11px 20px;
   border-radius: 8px;
-  background: #2563eb;
+  background: linear-gradient(
+        to bottom,
+        #151592 0%,
+        #05054b 50%,
+        #043f52 100%
+    );
   color: white;
   font-size: 13px;
   font-weight: 600;
@@ -801,7 +822,12 @@ textarea {
   border: none;
   padding: 11px 20px;
   border-radius: 8px;
-  background: #b9180c;
+  background: linear-gradient(
+        to bottom,
+        #c0031d 0%,
+        #5c0101 50%,
+        #310101 100%
+    );
   color: white;
   font-size: 13px;
   font-weight: 600;
@@ -810,7 +836,12 @@ textarea {
 }
 
 .btn-assume:hover {
-  background: #1d4ed8;
+  background: linear-gradient(
+        to bottom,
+        #151592 0%,
+        #05054b 50%,
+        #043f52 100%
+    );
 }
 
 .perfil-overlay {
@@ -935,3 +966,5 @@ textarea {
   font-size: 14px;
   font-weight: 600;
 }
+
+

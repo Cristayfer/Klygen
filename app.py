@@ -198,6 +198,7 @@ def solicitacoes():
     return render_template("solicitacoes.html")
 
 @app.route("/equipe")
+@login_required
 def equipe():
     return render_template("equipe.html")
 
@@ -545,4 +546,5 @@ def remover_foto_perfil():
 
 if __name__ == "__main__":
     criar_banco()
-    app.run(debug=True)
+    app.run(port=5000, 
+            debug=True)

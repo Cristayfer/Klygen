@@ -27,9 +27,6 @@
   </head>
 
   <body>
-    <!-- ============================= -->
-    <!-- SIDEBAR -->
-    <!-- ============================= -->
 
     <aside class="sidebar">
       <div class="logo">
@@ -80,15 +77,8 @@
       </nav>
     </aside>
 
-    <!-- ============================= -->
-    <!-- CONTEÚDO PRINCIPAL -->
-    <!-- ============================= -->
-
     <main>
       <section class="solicitacoes-page">
-        <!-- ============================= -->
-        <!-- CABEÇALHO -->
-        <!-- ============================= -->
 
         <div class="solicitacoes-header">
           <button class="btn-voltar" onclick="window.location.href = '/'">
@@ -110,14 +100,7 @@
           </div>
         </div>
 
-        <!-- ============================= -->
-        <!-- CONTEÚDO -->
-        <!-- ============================= -->
-
         <div class="solicitacoes-content">
-          <!-- ============================= -->
-          <!-- TOOLBAR -->
-          <!-- ============================= -->
 
           <div class="solicitacoes-toolbar">
             <div>
@@ -126,12 +109,7 @@
               <span id="ultima-atualizacao"> Carregando... </span>
             </div>
 
-            <!-- ============================= -->
-            <!-- FILTROS -->
-            <!-- ============================= -->
-
             <div class="solicitacoes-filtros">
-              <!-- BUSCA -->
               <div class="busca-solicitacao">
                 <span> ⌕ </span>
 
@@ -141,8 +119,6 @@
                   placeholder="Buscar solicitação..."
                 />
               </div>
-
-              <!-- PRIORIDADE -->
               <select id="filtro-prioridade">
                 <option value="all">Todas as prioridades</option>
 
@@ -153,7 +129,6 @@
                 <option value="low">Baixa</option>
               </select>
 
-              <!-- DATA -->
               <div class="busca-data">
                 <span> 📅 </span>
 
@@ -174,11 +149,6 @@
       </section>
     </main>
 
-    <!-- ============================= -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================= -->
-
     <script src="{{ url_for('static', filename='js/solicitacoes.js') }}"></script>
   </body>
 </html>
-```

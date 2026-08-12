@@ -26,7 +26,6 @@ function configurarFotoPerfil() {
       return;
     }
 
-    // Mostra a imagem imediatamente no perfil
     const leitor = new FileReader();
 
     leitor.onload = function (evento) {
@@ -46,7 +45,6 @@ function configurarFotoPerfil() {
 
     leitor.readAsDataURL(arquivo);
 
-    // Envia a imagem para o Flask
     const formulario = new FormData();
 
     formulario.append("foto", arquivo);
