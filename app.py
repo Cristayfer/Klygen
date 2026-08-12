@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 
 
 
+
 app = Flask(__name__)
 app.secret_key = "klygen-chave-secreta"
 
@@ -68,6 +69,41 @@ def usuario_logado():
     return {
         "usuario": dict(usuario)
     }
+
+
+
+@app.route("/api/usuarios/<usuario>")
+@login_required
+def buscar_usuario(usuario):
+
+    conexao = conectar()
+
+    usuario_banco = conexao.execute("""
+        SELECT
+            id,
+            nome,
+            usuario,
+            foto,
+            ramal,
+            pode_criar,
+            pode_resolver,
+            administrador,
+            ativo
+        FROM usuarios
+        WHERE usuario = ?
+    """, (usuario,)).fetchone()
+
+    conexao.close()
+
+    if not usuario_banco:
+        return {
+            "mensagem": "Usuário não encontrado."
+        }, 404
+
+    return {
+        "usuario": dict(usuario_banco)
+    }
+
 
 @app.route("/api/usuario-logado/foto", methods=["POST"])
 @login_required
@@ -154,7 +190,7 @@ def nova_tarefa():
 @app.route("/meu-perfil")
 @login_required
 def meu_perfil():
-    return render_template("meu-perfil.html")
+    return render_template("perfil.html")
 
 @app.route("/solicitacoes")
 @login_required
@@ -218,6 +254,81 @@ def realizar_login():
         "sucesso": True,
         "mensagem": "Login realizado com sucesso."
     }
+
+
+@app.route("/api/usuario/foto", methods=["POST"])
+def salvar_foto_perfil():
+
+    if "usuario_id" not in session:
+        return {
+            "sucesso": False,
+            "mensagem": "Usuário não autenticado."
+        }, 401
+
+    if "foto" not in request.files:
+        return {
+            "sucesso": False,
+            "mensagem": "Nenhuma foto foi enviada."
+        }, 400
+
+    foto = request.files["foto"]
+
+    if foto.filename == "":
+        return {
+            "sucesso": False,
+            "mensagem": "Nenhuma foto selecionada."
+        }, 400
+
+    extensoes_permitidas = {"png", "jpg", "jpeg", "webp"}
+
+    nome_original = secure_filename(foto.filename)
+    extensao = nome_original.rsplit(".", 1)[-1].lower()
+
+    if extensao not in extensoes_permitidas:
+        return {
+            "sucesso": False,
+            "mensagem": "Formato de imagem não permitido."
+        }, 400
+
+    nome_arquivo = f"usuario_{session['usuario_id']}.{extensao}"
+
+    pasta_perfis = os.path.join(
+        app.static_folder,
+        "img",
+        "perfis"
+    )
+
+    os.makedirs(pasta_perfis, exist_ok=True)
+
+    caminho_arquivo = os.path.join(
+        pasta_perfis,
+        nome_arquivo
+    )
+
+    foto.save(caminho_arquivo)
+
+    caminho_banco = f"/static/img/perfis/{nome_arquivo}"
+
+    conexao = conectar()
+
+    conexao.execute("""
+        UPDATE usuarios
+        SET foto = ?
+        WHERE id = ?
+    """, (
+        caminho_banco,
+        session["usuario_id"]
+    ))
+
+    conexao.commit()
+    conexao.close()
+
+    return {
+        "sucesso": True,
+        "mensagem": "Foto atualizada com sucesso.",
+        "foto": caminho_banco
+    }
+
 
 @app.route("/api/usuarios")
 def listar_usuarios():
@@ -411,6 +522,25 @@ def atualizar_status(tarefa_id):
         "mensagem": "Status atualizado"
     }
 
+@app.route("/api/usuario-logado/foto", methods=["DELETE"])
+@login_required
+def remover_foto_perfil():
+
+    conexao = conectar()
+
+    conexao.execute("""
+        UPDATE usuarios
+        SET foto = NULL
+        WHERE id = ?
+    """, (session["usuario_id"],))
+
+    conexao.commit()
+    conexao.close()
+
+    return {
+        "sucesso": True,
+        "mensagem": "Foto removida com sucesso."
+    }
 
 
 if __name__ == "__main__":
