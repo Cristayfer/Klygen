@@ -1,0 +1,49 @@
+<div class="perfil-modal">
+  <div class="perfil-header">
+    <div>
+      <span class="perfil-label">MINHA CONTA</span>
+      <h2>Meu Perfil</h2>
+    </div>
+
+    <button id="fechar-perfil">&times;</button>
+  </div>
+
+  <div class="perfil-conteudo">
+    <div class="perfil-foto-area">
+      <div class="perfil-foto-grande" id="perfil-foto-grande">
+        <span id="perfil-foto-iniciais">--</span>
+      </div>
+
+      <button id="alterar-foto" class="btn-foto">Alterar foto</button>
+
+      <input
+        type="file"
+        id="input-foto"
+        accept="image/png,image/jpeg,image/webp"
+        hidden
+      />
+    </div>
+
+    <div class="perfil-dados">
+      <div class="perfil-campo">
+        <span>Nome</span>
+        <strong id="perfil-dado-nome">Carregando...</strong>
+      </div>
+
+      <div class="perfil-campo">
+        <span>Usuário</span>
+        <strong id="perfil-dado-usuario">Carregando...</strong>
+      </div>
+
+      <div class="perfil-campo">
+        <span>Ramal</span>
+        <strong id="perfil-dado-ramal">Não informado</strong>
+      </div>
+
+      <div class="perfil-campo">
+        <span>Tipo de conta</span>
+        <strong id="perfil-dado-tipo">Carregando...</strong>
+      </div>
+    </div>
+  </div>
+</div>

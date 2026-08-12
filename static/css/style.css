@@ -348,6 +348,49 @@ main {
   font-weight: 700;
 }
 
+.perfil-usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.perfil-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1769e8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.perfil-info strong {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.perfil-info span {
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 3px;
+}
 /* ---------------- NOVA TAREFA ---------------- */
 
 .task-page {
@@ -717,4 +760,127 @@ textarea {
 
 .btn-assume:hover {
   background: #1d4ed8;
+}
+
+.perfil-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.perfil-modal {
+  width: 520px;
+  max-width: calc(100% - 40px);
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.perfil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+
+.perfil-label {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.perfil-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #0f172a;
+}
+
+#fechar-perfil {
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  color: #64748b;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.perfil-conteudo {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.perfil-foto-area {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perfil-foto-grande {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #1769e8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  overflow: hidden;
+}
+
+.perfil-foto-grande img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-foto {
+  margin-top: 14px;
+  padding: 8px 14px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: white;
+  color: #1769e8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-foto {
+  background: #f1f5f9;
+}
+
+.perfil-dados {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.perfil-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.perfil-campo span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.perfil-campo strong {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
 }

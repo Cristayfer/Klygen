@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Klygen</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,29 +23,22 @@
     <!-- SIDEBAR -->
 
     <aside class="sidebar">
-        <div class="logo">
-          <svg
-            class="logo-icon"
-            viewBox="0 0 200 200"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Klygen"
-          >
-            <polygon
-            points="35,27 124,27 200,103 124,103 85,65"
-            fill="#1769E8"
-            />
-            <polygon
-            points="35,27 85,70 85,137 35,180"
-            fill="#16D6C8"
-            />
-             <polygon
+      <div class="logo">
+        <svg
+          class="logo-icon"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-label="Klygen"
+        >
+          <polygon points="35,27 124,27 200,103 124,103 85,65" fill="#1769E8" />
+          <polygon points="35,27 85,70 85,137 35,180" fill="#16D6C8" />
+          <polygon
             points="35,180 124,180 200,103 124,103 85,137"
             fill="#6930F2"
-            />
-          </svg>
+          />
+        </svg>
 
-          <h2>KLYGEN</h2>
-        </div>
+        <h2>KLYGEN</h2>
       </div>
 
       <nav>
@@ -54,6 +50,16 @@
           <li><a href="configuracoes">Configurações</a></li>
         </ul>
       </nav>
+      <button class="perfil-usuario" id="perfil-usuario" type="button">
+        <div class="perfil-avatar" id="perfil-avatar">
+          <span id="perfil-iniciais">--</span>
+        </div>
+
+        <div class="perfil-info">
+          <strong id="perfil-nome">Carregando...</strong>
+          <span id="perfil-tipo">Usuário</span>
+        </div>
+      </button>
     </aside>
 
     <!-- CONTEÚDO -->
@@ -62,11 +68,6 @@
       <!-- HEADER -->
 
       <header class="header">
-        <div class="search-box">
-          <span class="search-icon">🔍 </span>
-          <input type="text" placeholder="Pesquisar tarefas..." />
-        </div>
-
         <div class="header-right">
           <button id="abrir" class="btn-add">+ Nova Tarefa</button>
 
@@ -87,8 +88,7 @@
               <span class="task-count danger"></span>
             </div>
           </div>
-          <div class="task-list">
-          </div>
+          <div class="task-list"></div>
         </div>
 
         <!-- Pronto -->
@@ -102,9 +102,7 @@
             </div>
           </div>
 
-          <div class="task-list">
-           
-          </div>
+          <div class="task-list"></div>
         </div>
 
         <!-- Em andamento -->
@@ -116,8 +114,7 @@
               <span class="task-count info"></span>
             </div>
           </div>
-          <div class="task-list">
-          </div>
+          <div class="task-list"></div>
         </div>
 
         <!-- Revisão -->

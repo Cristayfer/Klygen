@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Equipe Fiscal - Klygen</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+  </head>
+
+  <body>
+    <aside class="sidebar">
+      <div class="logo">
+        <svg
+          class="logo-icon"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-label="Klygen"
+        >
+          <polygon points="35,27 124,27 200,103 124,103 85,65" fill="#1769E8" />
+
+          <polygon points="35,27 85,70 85,137 35,180" fill="#16D6C8" />
+
+          <polygon
+            points="35,180 124,180 200,103 124,103 85,137"
+            fill="#6930F2"
+          />
+        </svg>
+
+        <h2>KLYGEN</h2>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="/">Tarefas</a></li>
+          <li><a href="/equipe">Equipe Fiscal</a></li>
+          <li><a href="calculadora.html">Calculadora Fiscal</a></li>
+          <li><a href="/solicitacoes">Solicitações</a></li>
+          <li><a href="configuracoes">Configurações</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="page-header">
+        <h1>Equipe Fiscal</h1>
+        <p>Usuários cadastrados no Klygen</p>
+      </header>
+
+      <section id="lista-equipe" class="equipe-lista"></section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/equipe.js') }}"></script>
+  </body>
+</html>

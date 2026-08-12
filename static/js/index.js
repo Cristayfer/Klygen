@@ -73,6 +73,126 @@ abrir.addEventListener("click", async () => {
   });
 });
 
+async function carregarUsuarioLogado() {
+  try {
+    const resposta = await fetch("/api/usuario-logado");
+
+    if (!resposta.ok) {
+      console.error("Não foi possível carregar o usuário logado.");
+      return;
+    }
+
+    const resultado = await resposta.json();
+    const usuario = resultado.usuario;
+
+    const nome = document.getElementById("perfil-nome");
+    const tipo = document.getElementById("perfil-tipo");
+    const iniciais = document.getElementById("perfil-iniciais");
+
+    if (nome) {
+      nome.textContent = usuario.nome;
+    }
+
+    if (iniciais) {
+      const partesNome = usuario.nome.trim().split(" ");
+
+      if (partesNome.length >= 2) {
+        iniciais.textContent =
+          partesNome[0][0] + partesNome[partesNome.length - 1][0];
+      } else {
+        iniciais.textContent = partesNome[0].substring(0, 2);
+      }
+    }
+
+    if (tipo) {
+      if (usuario.administrador) {
+        tipo.textContent = "Administrador";
+      } else if (usuario.pode_resolver) {
+        tipo.textContent = "Usuário";
+      } else {
+        tipo.textContent = "Solicitante";
+      }
+    }
+
+    console.log("USUÁRIO LOGADO:", usuario);
+  } catch (erro) {
+    console.error("ERRO AO CARREGAR USUÁRIO:", erro);
+  }
+}
+
+carregarUsuarioLogado();
+
+async function abrirMeuPerfil() {
+  const resposta = await fetch("/meu-perfil");
+  const html = await resposta.text();
+
+  const container = document.getElementById("details-modal-container");
+
+  container.innerHTML = `     <div class="perfil-overlay">
+      ${html}     </div>
+  `;
+
+  container.style.display = "flex";
+
+  const usuarioResposta = await fetch("/api/usuario-logado");
+  const resultado = await usuarioResposta.json();
+  const usuario = resultado.usuario;
+
+  const nome = document.getElementById("perfil-dado-nome");
+  const usuarioElemento = document.getElementById("perfil-dado-usuario");
+  const ramal = document.getElementById("perfil-dado-ramal");
+  const tipo = document.getElementById("perfil-dado-tipo");
+  const iniciais = document.getElementById("perfil-foto-iniciais");
+
+  if (nome) {
+    nome.textContent = usuario.nome;
+  }
+
+  if (usuarioElemento) {
+    usuarioElemento.textContent = usuario.usuario;
+  }
+
+  if (ramal) {
+    ramal.textContent = usuario.ramal || "Não informado";
+  }
+
+  if (tipo) {
+    if (usuario.administrador) {
+      tipo.textContent = "Administrador";
+    } else if (usuario.pode_resolver) {
+      tipo.textContent = "Usuário";
+    } else {
+      tipo.textContent = "Solicitante";
+    }
+  }
+
+  if (iniciais) {
+    const partesNome = usuario.nome.trim().split(" ");
+
+    if (partesNome.length >= 2) {
+      iniciais.textContent =
+        partesNome[0][0] + partesNome[partesNome.length - 1][0];
+    } else {
+      iniciais.textContent = partesNome[0].substring(0, 2);
+    }
+  }
+
+  const fechar = document.getElementById("fechar-perfil");
+
+  if (fechar) {
+    fechar.addEventListener("click", () => {
+      container.innerHTML = "";
+      container.style.display = "none";
+    });
+  }
+}
+
+const perfilUsuario = document.getElementById("perfil-usuario");
+
+if (perfilUsuario) {
+  perfilUsuario.addEventListener("click", abrirMeuPerfil);
+}
+
 async function carregarTarefas() {
   try {
     const resposta = await fetch("/api/tarefas");
