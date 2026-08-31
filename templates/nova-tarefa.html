@@ -32,18 +32,11 @@
           placeholder="Descreva o problema..."
         ></textarea>
       </div>
-      <div class="form-group">
-        <span class="form-label">Anexo</span>
-        <input
-          type="file"
-          id="anexo"
-          name="anexo"
-          accept=".png, .jpg, .jpeg, .pdf, .xlsx, .xls"
-          multiple
-        />
-
-        <label class="file-upload" for="anexo"> Selecionar Arquivo </label>
-        <small> Anexe um print ou pdf relacionados </small>
+      <div class="form-group"> <span class="form-label">Anexos</span>
+        <input type="file" id="anexo" name="anexo" accept=".png, .jpg, .jpeg, .pdf, .xlsx, .xls" multiple hidden />
+        <label class="file-upload" for="anexo"> 📎 Selecionar arquivos </label>
+        <small> Anexe prints, PDFs ou planilhas relacionados à solicitação. </small>
+        <div id="lista-arquivos" class="lista-arquivos"></div> 
       </div>
 
       <div class="form-row">

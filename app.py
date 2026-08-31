@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, send_from_directory
 from functools import wraps
 from database import criar_banco, conectar, criar_usuario
 from werkzeug.security import check_password_hash
@@ -16,8 +16,14 @@ app.static_folder,
 "img",
 "perfis"
 )
+PASTA_ANEXOS = os.path.join(
+    app.static_folder,
+    "uploads",
+    "tarefas"
+)
 
 os.makedirs(PASTA_PERFIS, exist_ok=True)
+os.makedirs(PASTA_ANEXOS, exist_ok=True)
 
 def login_required(func):
 
@@ -70,6 +76,34 @@ def usuario_logado():
         "usuario": dict(usuario)
     }
 
+
+@app.route("/api/anexos/<int:anexo_id>/download")
+def baixar_anexo(anexo_id):
+
+    conexao = conectar()
+
+    anexo = conexao.execute("""
+        SELECT nome_arquivo, nome_original
+        FROM anexos
+        WHERE id = ?
+    """, (
+        anexo_id,
+    )).fetchone()
+
+    conexao.close()
+
+    if not anexo:
+        return {
+            "sucesso": False,
+            "mensagem": "Arquivo não encontrado."
+        }, 404
+
+    return send_from_directory(
+        PASTA_ANEXOS,
+        anexo["nome_arquivo"],
+        as_attachment=True,
+        download_name=anexo["nome_original"]
+    )
 
 
 @app.route("/api/usuarios/<usuario>")
@@ -442,13 +476,23 @@ def listar_solicitacoes():
 
 @app.route("/api/tarefas", methods=["POST"])
 def criar_tarefa():
-    dados = request.get_json()
 
-    print("TAREFA RECEBIDA:", dados)
+    titulo = request.form.get("titulo", "").strip()
+    descricao = request.form.get("descricao", "").strip()
+    prioridade = request.form.get("prioridade", "")
+    estado = request.form.get("estado", "")
+    data = request.form.get("data", "")
+    solicitante = request.form.get("solicitante", "").strip()
+
+    if not titulo or not prioridade or not estado or not data or not solicitante:
+        return {
+            "sucesso": False,
+            "mensagem": "Preencha todos os campos obrigatórios."
+        }, 400
 
     conexao = conectar()
 
-    conexao.execute("""
+    cursor = conexao.execute("""
         INSERT INTO tarefas (
             titulo,
             descricao,
@@ -461,27 +505,79 @@ def criar_tarefa():
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        dados["titulo"],
-        dados["descricao"],
-        dados["prioridade"],
-        dados["estado"],
-        dados["data"],
-        dados["solicitante"],
+        titulo,
+        descricao,
+        prioridade,
+        estado,
+        data,
+        solicitante,
         "",
         "pending"
     ))
 
+    tarefa_id = cursor.lastrowid
+
+    # PEGAR TODOS OS ARQUIVOS ENVIADOS
+    arquivos = request.files.getlist("anexo")
+
+    for arquivo in arquivos:
+
+        if not arquivo or arquivo.filename == "":
+            continue
+
+        nome_original = arquivo.filename
+
+        nome_seguro = secure_filename(nome_original)
+
+        if not nome_seguro:
+            continue
+
+        nome_arquivo = f"tarefa_{tarefa_id}_{nome_seguro}"
+
+        caminho = os.path.join(
+            PASTA_ANEXOS,
+            nome_arquivo
+        )
+
+        # SALVAR O ARQUIVO
+        arquivo.save(caminho)
+
+        caminho_banco = f"/static/uploads/tarefas/{nome_arquivo}"
+
+        # SALVAR INFORMAÇÕES DO ARQUIVO NO BANCO
+        conexao.execute("""
+            INSERT INTO anexos (
+                tarefa_id,
+                nome_original,
+                nome_arquivo,
+                caminho
+            )
+            VALUES (?, ?, ?, ?)
+        """, (
+            tarefa_id,
+            nome_original,
+            nome_arquivo,
+            caminho_banco
+        ))
+
     conexao.commit()
     conexao.close()
 
+    print(
+        f"TAREFA {tarefa_id} CRIADA COM {len(arquivos)} ANEXO(S)"
+    )
+
     return {
         "sucesso": True,
-        "mensagem": "Tarefa salva no banco de dados"
+        "mensagem": "Tarefa salva no banco de dados",
+        "id": tarefa_id,
+        "tarefa_id": tarefa_id
     }
 
 
 @app.route("/api/tarefas", methods=["GET"])
 def listar_tarefas():
+
     conexao = conectar()
 
     tarefas = conexao.execute("""
@@ -490,10 +586,42 @@ def listar_tarefas():
         ORDER BY id DESC
     """).fetchall()
 
+    lista_tarefas = []
+
+    for tarefa in tarefas:
+
+        tarefa_dict = dict(tarefa)
+
+        anexos = conexao.execute("""
+            SELECT
+                id,
+                nome_original,
+                nome_arquivo,
+                caminho
+            FROM anexos
+            WHERE tarefa_id = ?
+            ORDER BY id ASC
+        """, (
+            tarefa["id"],
+        )).fetchall()
+
+        tarefa_dict["anexos"] = []
+
+        for anexo in anexos:
+
+            tarefa_dict["anexos"].append({
+                "id": anexo["id"],
+                "name": anexo["nome_original"],
+                "url": anexo["caminho"],
+                "download_url": f"/api/anexos/{anexo['id']}/download"
+            })
+
+        lista_tarefas.append(tarefa_dict)
+
     conexao.close()
 
     return {
-        "tarefas": [dict(tarefa) for tarefa in tarefas]
+        "tarefas": lista_tarefas
     }
 
 @app.route("/api/tarefas/<int:tarefa_id>/status", methods=["PUT"])

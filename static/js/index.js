@@ -45,6 +45,82 @@ if (abrir) {
       }
 
       const formulario = document.getElementById("task-form");
+      const anexo = document.getElementById("anexo");
+      const listaArquivos = document.getElementById("lista-arquivos");
+
+      let arquivosSelecionados = [];
+
+      if (anexo && listaArquivos) {
+        anexo.addEventListener("change", () => {
+          const novosArquivos = Array.from(anexo.files);
+
+          novosArquivos.forEach((arquivo) => {
+            const jaExiste = arquivosSelecionados.some(
+              (item) =>
+                item.name === arquivo.name &&
+                item.size === arquivo.size &&
+                item.lastModified === arquivo.lastModified,
+            );
+
+            if (!jaExiste) {
+              arquivosSelecionados.push(arquivo);
+            }
+          });
+
+          atualizarListaArquivos();
+
+          anexo.value = "";
+        });
+      }
+
+      function atualizarListaArquivos() {
+        if (!listaArquivos) {
+          return;
+        }
+
+        listaArquivos.innerHTML = "";
+
+        if (arquivosSelecionados.length === 0) {
+          return;
+        }
+
+        arquivosSelecionados.forEach((arquivo, indice) => {
+          const item = document.createElement("div");
+
+          item.classList.add("arquivo-selecionado");
+
+          item.innerHTML = `
+            <div class="arquivo-info">
+              <span class="arquivo-icone">📎</span>
+
+              <span class="arquivo-nome" title="${arquivo.name}">
+                ${arquivo.name}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              class="remover-arquivo"
+              data-indice="${indice}"
+              title="Remover arquivo"
+            >
+              ×
+            </button>
+          `;
+
+          listaArquivos.appendChild(item);
+        });
+
+        document.querySelectorAll(".remover-arquivo").forEach((botao) => {
+          botao.addEventListener("click", () => {
+            const indice = Number(botao.dataset.indice);
+
+            arquivosSelecionados.splice(indice, 1);
+
+            atualizarListaArquivos();
+          });
+        });
+      }
 
       if (!formulario) {
         console.error("Formulário de tarefa não encontrado.");
@@ -64,9 +140,19 @@ if (abrir) {
           ? usuarioLogado.usuario
           : document.getElementById("solicitante")?.value || "";
 
-        const anexo = document.getElementById("anexo");
+        const arquivos = [...arquivosSelecionados];
+        const formData = new FormData();
 
-        const arquivos = anexo ? Array.from(anexo.files) : [];
+        formData.append("titulo", titulo);
+        formData.append("descricao", descricao);
+        formData.append("prioridade", prioridade);
+        formData.append("estado", estado);
+        formData.append("data", data);
+        formData.append("solicitante", solicitante);
+
+        arquivos.forEach((arquivo) => {
+          formData.append("anexo", arquivo);
+        });
 
         if (!titulo || !prioridade || !estado || !data) {
           alert("Preencha todos os campos obrigatórios.");
@@ -77,19 +163,7 @@ if (abrir) {
         try {
           const resposta = await fetch("/api/tarefas", {
             method: "POST",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-
-            body: JSON.stringify({
-              titulo: titulo,
-              descricao: descricao,
-              prioridade: prioridade,
-              estado: estado,
-              data: data,
-              solicitante: solicitante,
-            }),
+            body: formData,
           });
 
           const resultado = await resposta.json();
@@ -112,7 +186,7 @@ if (abrir) {
             estado,
             solicitante,
             arquivos,
-            resultado.id || null,
+            resultado.tarefa_id || null,
           );
 
           modalContainer.innerHTML = "";
@@ -487,7 +561,7 @@ async function carregarTarefas() {
         tarefa.data,
         tarefa.estado,
         tarefa.solicitante,
-        [],
+        tarefa.anexos || [],
         tarefa.id,
         tarefa.status,
         tarefa.responsavel,
@@ -736,6 +810,7 @@ async function abrirDetalhes(
     ? await buscarUsuario(responsavel)
     : null;
 
+  console.log("ANEXOS RECEBIDOS NO DETALHE:", arquivos);
   console.log("STATUS DO CARD:", card.dataset.status);
 
   let nomePrioridade = "";
@@ -764,48 +839,91 @@ async function abrirDetalhes(
 
   if (arquivos && arquivos.length > 0) {
     for (const arquivo of arquivos) {
+      const nomeArquivo = arquivo.name || arquivo.nome || arquivo.nome_original;
+
+      const urlArquivo =
+        arquivo.url || arquivo.caminho || arquivo.path || arquivo.arquivo;
+
+      if (!urlArquivo) {
+        console.warn("URL do anexo não encontrada:", arquivo);
+
+        listaArquivos += `
+        <div class="attachment">
+          <div class="attachment-info">
+            <span class="attachment-icon">📎</span>
+            <span class="attachment-name">${nomeArquivo}</span>
+          </div>
+        </div>
+      `;
+
+        continue;
+      }
+
       listaArquivos += `
-                <div class="attachment">
-                    📎 ${arquivo.name}
-                </div>
-            `;
+      <div class="attachment">
+
+        <div class="attachment-info">
+          <span class="attachment-icon">📎</span>
+
+          <a
+            href="${urlArquivo}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="attachment-name"
+            title="Visualizar arquivo"
+          >
+            ${nomeArquivo}
+          </a>
+        </div>
+
+        <a
+          href="${urlArquivo}"
+          download="${nomeArquivo}"
+          class="attachment-download"
+          title="Baixar arquivo"
+        >
+          ↓
+        </a>
+
+      </div>
+    `;
     }
   } else {
     listaArquivos = `
-            <p class="no-attachments">
-                Nenhum arquivo anexado.
-            </p>
-        `;
+    <p class="no-attachments">
+      Nenhum arquivo anexado.
+    </p>
+  `;
   }
 
   let htmlResponsavel;
 
   if (usuarioResponsavel) {
     htmlResponsavel = `
-            <div class="details-user">
+              <div class="details-user">
 
-                ${criarAvatarUsuario(usuarioResponsavel, "small")}
+                  ${criarAvatarUsuario(usuarioResponsavel, "small")}
 
-                <strong>
-                    ${usuarioResponsavel.nome}
-                </strong>
+                  <strong>
+                      ${usuarioResponsavel.nome}
+                  </strong>
 
-            </div>
-        `;
+              </div>
+          `;
   } else {
     htmlResponsavel = `
-            <div class="details-user">
+              <div class="details-user">
 
-                <div class="details-avatar">
-                    <span>--</span>
-                </div>
+                  <div class="details-avatar">
+                      <span>--</span>
+                  </div>
 
-                <strong>
-                    Ainda não atribuído
-                </strong>
+                  <strong>
+                      Ainda não atribuído
+                  </strong>
 
-            </div>
-        `;
+              </div>
+          `;
   }
 
   detailsContainer.innerHTML = `

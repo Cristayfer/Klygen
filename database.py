@@ -60,6 +60,17 @@ def criar_banco():
     """)
 
     conexao.execute("""
+        CREATE TABLE IF NOT EXISTS anexos ( 
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            tarefa_id INTEGER NOT NULL,
+            nome_original TEXT NOT NULL,
+            nome_arquivo TEXT NOT NULL,
+            caminho TEXT NOT NULL,
+            FOREIGN KEY (tarefa_id) REFERENCES tarefas(id)
+        )
+    """)
+
+    conexao.execute("""
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
