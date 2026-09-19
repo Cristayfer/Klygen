@@ -26,4 +26,6 @@ Este projeto faz parte do meu portifólio de desenvolvimento e será evoluído c
 
 ## 📅 Próximas implementações
 
-- Drag and Drop
+- Calculadora fiscal
+- Revisão de tarefas já concluídas
+- Configurações para o perfil dos usuários
