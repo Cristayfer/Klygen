@@ -810,8 +810,19 @@ async function abrirDetalhes(
     ? await buscarUsuario(responsavel)
     : null;
 
+  const podeResolver =
+    usuarioLogado &&
+    (usuarioLogado.pode_resolver || usuarioLogado.administrador);
+
+  const ehSolicitante =
+    usuarioLogado &&
+    usuarioSolicitante &&
+    usuarioLogado.id == usuarioSolicitante.id;
+
   console.log("ANEXOS RECEBIDOS NO DETALHE:", arquivos);
   console.log("STATUS DO CARD:", card.dataset.status);
+  console.log("PODE RESOLVER:", podeResolver);
+  console.log("É SOLICITANTE:", ehSolicitante);
 
   let nomePrioridade = "";
 
@@ -1093,7 +1104,7 @@ async function abrirDetalhes(
 
 
                     ${
-                      card.dataset.status === "pending"
+                      card.dataset.status === "pending" && podeResolver
                         ? `
                                 <button
                                     id="assumir-tarefa"
@@ -1107,7 +1118,7 @@ async function abrirDetalhes(
 
 
                     ${
-                      card.dataset.status === "progress"
+                      card.dataset.status === "progress" && podeResolver
                         ? `
                                 <button
                                     id="finalizar-tarefa"
@@ -1121,7 +1132,7 @@ async function abrirDetalhes(
 
 
                     ${
-                      card.dataset.status === "ready"
+                      card.dataset.status === "ready" && ehSolicitante
                         ? `
                                 <button
                                     id="concluir-tarefa"
@@ -1142,7 +1153,7 @@ async function abrirDetalhes(
 
 
                     ${
-                      card.dataset.status === "review"
+                      card.dataset.status === "review" && podeResolver
                         ? `
                                 <button
                                     id="retomar-tarefa"

@@ -624,7 +624,9 @@ def listar_tarefas():
         "tarefas": lista_tarefas
     }
 
+
 @app.route("/api/tarefas/<int:tarefa_id>/status", methods=["PUT"])
+@login_required
 def atualizar_status(tarefa_id):
     dados = request.get_json()
 
@@ -632,6 +634,104 @@ def atualizar_status(tarefa_id):
     responsavel = dados.get("responsavel", "")
 
     conexao = conectar()
+    usuario = conexao.execute("""
+        SELECT
+            id,
+            usuario,
+            pode_resolver,
+            administrador
+        FROM usuarios
+        WHERE id = ?
+    """, (session["usuario_id"],)).fetchone()
+
+    if not usuario:
+        conexao.close()
+
+        return {
+            "sucesso": False,
+            "mensagem": "Usuário não encontrado."
+        }, 404
+
+    tarefa = conexao.execute("""
+        SELECT
+            id,
+            status,
+            solicitante,
+            responsavel
+        FROM tarefas
+        WHERE id = ?
+    """, (tarefa_id,)).fetchone()
+
+    if not tarefa:
+        conexao.close()
+
+        return {
+            "sucesso": False,
+            "mensagem": "Tarefa não encontrada."
+        }, 404
+
+    pode_resolver = (
+        usuario["pode_resolver"] or
+        usuario["administrador"]
+    )
+
+    eh_solicitante = (
+        tarefa["solicitante"] == usuario["usuario"]
+    )
+
+    status_atual = tarefa["status"]
+
+    if pode_resolver:
+
+
+        if status_atual == "pending" and novo_status == "progress":
+            pass
+
+
+        elif status_atual == "progress" and novo_status == "ready":
+            pass
+
+        elif status_atual == "review" and novo_status == "progress":
+            pass
+
+        else:
+            conexao.close()
+
+            return {
+                "sucesso": False,
+                "mensagem": "Essa alteração de status não é permitida."
+            }, 403
+
+    elif eh_solicitante:
+
+  
+        if status_atual == "ready" and novo_status == "completed":
+            pass
+
+
+        elif status_atual == "ready" and novo_status == "review":
+            pass
+
+        else:
+            conexao.close()
+
+            return {
+                "sucesso": False,
+                "mensagem": "Você não tem permissão para executar esta ação."
+            }, 403
+
+    else:
+        conexao.close()
+
+        return {
+            "sucesso": False,
+            "mensagem": "Você não tem permissão para alterar esta tarefa."
+        }, 403
+
+
+    if not pode_resolver:
+        responsavel = tarefa["responsavel"] or ""
+
 
     conexao.execute("""
         UPDATE tarefas
@@ -650,6 +750,7 @@ def atualizar_status(tarefa_id):
         "sucesso": True,
         "mensagem": "Status atualizado"
     }
+
 
 @app.route("/api/usuario-logado/foto", methods=["DELETE"])
 @login_required
