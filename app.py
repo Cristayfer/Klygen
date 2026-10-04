@@ -44,11 +44,59 @@ def logout():
 
     return redirect(url_for("login"))
 
-@app.route("/api/usuario-logado")
+@app.route("/api/usuario-logado", methods=["GET", "PUT"])
 @login_required
 def usuario_logado():
 
     conexao = conectar()
+
+    if request.method == "PUT":
+
+        dados = request.get_json()
+
+        nome = dados.get("nome")
+        ramal = dados.get("ramal")
+
+        if nome is not None:
+            nome = nome.strip()
+
+            if not nome:
+                conexao.close()
+
+                return {
+                    "sucesso": False,
+                    "mensagem": "O nome não pode ficar vazio."
+                }, 400
+
+            conexao.execute("""
+                UPDATE usuarios
+                SET nome = ?
+                WHERE id = ?
+            """, (
+                nome,
+                session["usuario_id"]
+            ))
+
+        if ramal is not None:
+
+            ramal = ramal.strip()
+
+            conexao.execute("""
+                UPDATE usuarios
+                SET ramal = ?
+                WHERE id = ?
+            """, (
+                ramal,
+                session["usuario_id"]
+            ))
+
+        conexao.commit()
+        conexao.close()
+
+        return {
+            "sucesso": True,
+            "mensagem": "Dados atualizados com sucesso."
+        }
 
     usuario = conexao.execute("""
         SELECT
@@ -74,6 +122,43 @@ def usuario_logado():
 
     return {
         "usuario": dict(usuario)
+    }
+
+@app.route("/api/usuario-logado", methods=["PUT"])
+@login_required
+def atualizar_usuario_logado():
+
+    dados = request.get_json()
+
+    nome = dados.get("nome", "").strip()
+    ramal = dados.get("ramal", "").strip()
+
+    if not nome:
+        return {
+            "sucesso": False,
+            "mensagem": "O nome não pode ficar vazio."
+        }, 400
+
+    conexao = conectar()
+
+    conexao.execute("""
+        UPDATE usuarios
+        SET nome = ?, ramal = ?
+        WHERE id = ?
+    """, (
+        nome,
+        ramal,
+        session["usuario_id"]
+    ))
+
+    conexao.commit()
+    conexao.close()
+
+    return {
+        "sucesso": True,
+        "mensagem": "Dados atualizados com sucesso.",
+        "nome": nome,
+        "ramal": ramal
     }
 
 

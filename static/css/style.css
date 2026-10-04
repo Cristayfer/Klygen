@@ -966,3 +966,103 @@ textarea {
   font-size: 19px;
   line-height: 1;
 }
+
+/* ---------------- PERFIL USUARIOS ---------------- */
+
+.perfil-valor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-editar-campo {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 7px;
+  background: #f1f5f9;
+  color: #1769e8;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+
+  transition: 0.2s ease;
+}
+
+.btn-editar-campo:hover {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.campo-bloqueado {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.campo-edicao {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.campo-edicao input {
+  width: 180px;
+  height: 32px;
+
+  padding: 6px 9px;
+
+  border: 1px solid #dbe3ef;
+  border-radius: 7px;
+
+  outline: none;
+
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+
+  color: #0f172a;
+}
+
+.campo-edicao input:focus {
+  border-color: #1769e8;
+
+  box-shadow: 0 0 0 3px rgba(23, 105, 232, 0.1);
+}
+
+.btn-salvar-campo,
+.btn-cancelar-campo {
+  height: 32px;
+
+  padding: 0 10px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.btn-salvar-campo {
+  border: none;
+  background: #1769e8;
+  color: white;
+}
+
+.btn-salvar-campo:hover {
+  background: #1258c7;
+}
+
+.btn-cancelar-campo {
+  border: 1px solid #dbe3ef;
+  background: white;
+  color: #64748b;
+}
+
+.btn-cancelar-campo:hover {
+  background: #f1f5f9;
+}

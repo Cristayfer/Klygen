@@ -302,6 +302,8 @@ async function abrirMeuPerfil() {
             </div>
         `;
 
+    configurarPerfil();
+
     container.style.display = "flex";
 
     const usuarioResposta = await fetch("/api/usuario-logado");
@@ -355,10 +357,6 @@ async function abrirMeuPerfil() {
         tipo.textContent = "Solicitante";
       }
     }
-
-    // ====================================================
-    // FOTO GRANDE
-    // ====================================================
 
     if (fotoGrande) {
       if (usuario.foto) {

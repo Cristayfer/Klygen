@@ -15,6 +15,7 @@
       </div>
 
       <button id="alterar-foto" class="btn-foto">Alterar foto</button>
+
       <button id="remover-foto" class="btn-foto btn-remover-foto">
         Remover foto
       </button>
@@ -28,24 +29,62 @@
     </div>
 
     <div class="perfil-dados">
+      <!-- NOME -->
       <div class="perfil-campo">
         <span>Nome</span>
-        <strong id="perfil-dado-nome">Carregando...</strong>
+
+        <div class="perfil-valor">
+          <strong id="perfil-dado-nome"> Carregando... </strong>
+
+          <button
+            type="button"
+            class="btn-editar-campo"
+            id="editar-nome"
+            title="Editar nome"
+          >
+            ✎
+          </button>
+        </div>
       </div>
 
+      <!-- USUÁRIO -->
       <div class="perfil-campo">
         <span>Usuário</span>
-        <strong id="perfil-dado-usuario">Carregando...</strong>
+
+        <div class="perfil-valor">
+          <strong id="perfil-dado-usuario"> Carregando... </strong>
+
+          <span class="campo-bloqueado" title="O usuário não pode ser alterado">
+            🔒
+          </span>
+        </div>
       </div>
 
+      <!-- RAMAL -->
       <div class="perfil-campo">
         <span>Ramal</span>
-        <strong id="perfil-dado-ramal">Não informado</strong>
+
+        <div class="perfil-valor">
+          <strong id="perfil-dado-ramal"> Não informado </strong>
+
+          <button
+            type="button"
+            class="btn-editar-campo"
+            id="editar-ramal"
+            title="Editar ramal"
+          >
+            ✎
+          </button>
+        </div>
       </div>
 
+      <!-- TIPO DE CONTA -->
       <div class="perfil-campo">
         <span>Tipo de conta</span>
-        <strong id="perfil-dado-tipo">Carregando...</strong>
+
+        <div class="perfil-valor">
+          <strong id="perfil-dado-tipo"> Carregando... </strong>
+        </div>
       </div>
     </div>
   </div>
