@@ -14,12 +14,6 @@ if (abrir) {
   abrir.addEventListener("click", async () => {
     try {
       const resposta = await fetch("/nova-tarefa");
-
-      if (!resposta.ok) {
-        console.error("Não foi possível carregar a nova tarefa.");
-        return;
-      }
-
       const html = await resposta.text();
 
       modalContainer.innerHTML = html;
@@ -45,6 +39,12 @@ if (abrir) {
       }
 
       const formulario = document.getElementById("task-form");
+
+      if (!formulario) {
+        console.error("Formulário de tarefa não encontrado.");
+        return;
+      }
+
       const anexo = document.getElementById("anexo");
       const listaArquivos = document.getElementById("lista-arquivos");
 
@@ -93,7 +93,10 @@ if (abrir) {
             <div class="arquivo-info">
               <span class="arquivo-icone">📎</span>
 
-              <span class="arquivo-nome" title="${arquivo.name}">
+              <span
+                class="arquivo-nome"
+                title="${arquivo.name}"
+              >
                 ${arquivo.name}
               </span>
             </div>
@@ -122,25 +125,45 @@ if (abrir) {
         });
       }
 
-      if (!formulario) {
-        console.error("Formulário de tarefa não encontrado.");
-        return;
-      }
+      // ==============================
+      // ENVIO DO FORMULÁRIO
+      // ==============================
 
       formulario.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const titulo = document.getElementById("titulo").value;
-        const descricao = document.getElementById("descricao").value;
-        const prioridade = document.getElementById("prioridade").value;
-        const estado = document.getElementById("estado").value;
-        const data = document.getElementById("data").value;
+        const titulo = document.getElementById("titulo")?.value.trim();
+        const descricao =
+          document.getElementById("descricao")?.value.trim() || "";
+
+        const prioridade = document.getElementById("prioridade")?.value || "";
+
+        const estado = document.getElementById("estado")?.value || "";
+
+        const data = document.getElementById("data")?.value || "";
 
         const solicitante = usuarioLogado
           ? usuarioLogado.usuario
-          : document.getElementById("solicitante")?.value || "";
+          : document.getElementById("solicitante")?.value.trim() || "";
 
-        const arquivos = [...arquivosSelecionados];
+        // ==============================
+        // VALIDAÇÃO
+        // ==============================
+
+        if (!titulo || !prioridade || !estado || !data) {
+          alert("Preencha todos os campos obrigatórios.");
+          return;
+        }
+
+        if (!solicitante) {
+          alert("Não foi possível identificar o usuário solicitante.");
+          return;
+        }
+
+        // ==============================
+        // FORMDATA
+        // ==============================
+
         const formData = new FormData();
 
         formData.append("titulo", titulo);
@@ -150,15 +173,13 @@ if (abrir) {
         formData.append("data", data);
         formData.append("solicitante", solicitante);
 
-        arquivos.forEach((arquivo) => {
+        arquivosSelecionados.forEach((arquivo) => {
           formData.append("anexo", arquivo);
         });
 
-        if (!titulo || !prioridade || !estado || !data) {
-          alert("Preencha todos os campos obrigatórios.");
-
-          return;
-        }
+        // ==============================
+        // ENVIA PARA O FLASK
+        // ==============================
 
         try {
           const resposta = await fetch("/api/tarefas", {
@@ -170,11 +191,19 @@ if (abrir) {
 
           console.log("RESPOSTA DO FLASK:", resultado);
 
-          if (!resposta.ok) {
+          // ==============================
+          // LIMITE DE 5 TAREFAS
+          // ==============================
+
+          if (!resposta.ok || !resultado.sucesso) {
             alert(resultado.mensagem || "Não foi possível criar a tarefa.");
 
             return;
           }
+
+          // ==============================
+          // CRIA CARD NA TELA
+          // ==============================
 
           console.log("CRIANDO CARD NO JAVASCRIPT");
 
@@ -185,9 +214,15 @@ if (abrir) {
             data,
             estado,
             solicitante,
-            arquivos,
+            arquivosSelecionados,
             resultado.tarefa_id || null,
+            "pending",
+            "",
           );
+
+          // ==============================
+          // FECHA MODAL
+          // ==============================
 
           modalContainer.innerHTML = "";
         } catch (erro) {
@@ -198,6 +233,8 @@ if (abrir) {
       });
     } catch (erro) {
       console.error("ERRO AO ABRIR NOVA TAREFA:", erro);
+
+      alert("Não foi possível abrir a tela de nova tarefa.");
     }
   });
 }

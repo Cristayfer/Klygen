@@ -577,6 +577,31 @@ def criar_tarefa():
 
     conexao = conectar()
 
+    # ============================================================
+    # LIMITE DE 5 TAREFAS ABERTAS POR USUÁRIO
+    # ============================================================
+
+    tarefas_abertas = conexao.execute("""
+        SELECT COUNT(*) AS total
+        FROM tarefas
+        WHERE solicitante = ?
+        AND status != 'completed'
+    """, (solicitante,)).fetchone()
+
+    total_tarefas = tarefas_abertas["total"]
+
+    if total_tarefas >= 5:
+        conexao.close()
+
+        return {
+            "sucesso": False,
+            "mensagem": (
+                "Você já possui 5 solicitações em aberto. "
+                "Assim que uma solicitação for concluída poderá abrir outra"
+            )
+        }, 400
+
+
     cursor = conexao.execute("""
         INSERT INTO tarefas (
             titulo,
@@ -602,7 +627,6 @@ def criar_tarefa():
 
     tarefa_id = cursor.lastrowid
 
-    # PEGAR TODOS OS ARQUIVOS ENVIADOS
     arquivos = request.files.getlist("anexo")
 
     for arquivo in arquivos:
@@ -624,12 +648,10 @@ def criar_tarefa():
             nome_arquivo
         )
 
-        # SALVAR O ARQUIVO
         arquivo.save(caminho)
 
         caminho_banco = f"/static/uploads/tarefas/{nome_arquivo}"
 
-        # SALVAR INFORMAÇÕES DO ARQUIVO NO BANCO
         conexao.execute("""
             INSERT INTO anexos (
                 tarefa_id,
@@ -658,7 +680,6 @@ def criar_tarefa():
         "id": tarefa_id,
         "tarefa_id": tarefa_id
     }
-
 
 @app.route("/api/tarefas", methods=["GET"])
 def listar_tarefas():
