@@ -1066,3 +1066,23 @@ textarea {
 .btn-cancelar-campo:hover {
   background: #f1f5f9;
 }
+
+.card.fade-out {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+  pointer-events: none;
+}
+
+.card-concluido {
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.card-removendo {
+  opacity: 0;
+  transform: translateY(-8px);
+}

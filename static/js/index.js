@@ -191,19 +191,11 @@ if (abrir) {
 
           console.log("RESPOSTA DO FLASK:", resultado);
 
-          // ==============================
-          // LIMITE DE 5 TAREFAS
-          // ==============================
-
           if (!resposta.ok || !resultado.sucesso) {
             alert(resultado.mensagem || "Não foi possível criar a tarefa.");
 
             return;
           }
-
-          // ==============================
-          // CRIA CARD NA TELA
-          // ==============================
 
           console.log("CRIANDO CARD NO JAVASCRIPT");
 
@@ -219,10 +211,6 @@ if (abrir) {
             "pending",
             "",
           );
-
-          // ==============================
-          // FECHA MODAL
-          // ==============================
 
           modalContainer.innerHTML = "";
         } catch (erro) {
@@ -496,10 +484,6 @@ async function abrirMeuPerfil() {
       });
     }
 
-    // ====================================================
-    // REMOVER FOTO
-    // ====================================================
-
     if (removerFoto) {
       removerFoto.addEventListener("click", async () => {
         try {
@@ -521,8 +505,6 @@ async function abrirMeuPerfil() {
 
           console.log("FOTO REMOVIDA:", resultadoRemover);
 
-          // FOTO GRANDE
-
           if (fotoGrande) {
             fotoGrande.innerHTML = `
                                 <span id="perfil-foto-iniciais">
@@ -530,8 +512,6 @@ async function abrirMeuPerfil() {
                                 </span>
                             `;
           }
-
-          // FOTO SIDEBAR
 
           const avatar = document.getElementById("perfil-avatar");
 
@@ -542,8 +522,6 @@ async function abrirMeuPerfil() {
                                 </span>
                             `;
           }
-
-          // Atualiza usuário local
 
           usuarioLogado.foto = null;
         } catch (erro) {
@@ -578,14 +556,12 @@ async function carregarTarefas() {
 
     if (!resposta.ok) {
       console.error("Não foi possível carregar as tarefas.");
-
       return;
     }
 
     const resultado = await resposta.json();
 
     console.log("TAREFAS DO BANCO:", resultado);
-
     console.log("LISTA DE TAREFAS:", resultado.tarefas);
 
     resultado.tarefas.forEach((tarefa) => {
@@ -600,6 +576,7 @@ async function carregarTarefas() {
         tarefa.id,
         tarefa.status,
         tarefa.responsavel,
+        tarefa.concluida_em,
       );
     });
   } catch (erro) {
@@ -614,8 +591,6 @@ async function buscarUsuario(usuario) {
 
   try {
     console.log("BUSCANDO USUÁRIO:", usuario);
-
-    // Primeiro verifica se é o próprio usuário logado
 
     if (usuarioLogado && usuarioLogado.usuario === usuario) {
       return usuarioLogado;
@@ -683,6 +658,7 @@ async function criarTarefa(
   id = null,
   status = "pending",
   responsavel = "",
+  concluidaEm = null,
 ) {
   const usuarioSolicitante = await buscarUsuario(solicitante);
 
@@ -690,7 +666,6 @@ async function criarTarefa(
 
   if (!coluna) {
     console.error("Coluna não encontrada:", status);
-
     return;
   }
 
@@ -698,8 +673,21 @@ async function criarTarefa(
 
   if (!taskList) {
     console.error("Lista de tarefas não encontrada.");
-
     return;
+  }
+
+  if (status === "completed" && concluidaEm) {
+    const dataConclusao = new Date(concluidaEm.replace(" ", "T"));
+
+    const agora = new Date();
+
+    const duasHoras = 2 * 60 * 60 * 1000;
+
+    const tempoPassado = agora.getTime() - dataConclusao.getTime();
+
+    if (tempoPassado >= duasHoras) {
+      return;
+    }
   }
 
   const card = document.createElement("div");
@@ -707,10 +695,9 @@ async function criarTarefa(
   card.classList.add("card", `priority-${prioridade}`);
 
   card.dataset.id = id;
-
   card.dataset.status = status;
-
   card.dataset.responsavel = responsavel;
+  card.dataset.concluidaEm = concluidaEm || "";
 
   card.addEventListener("click", () => {
     abrirDetalhes(
@@ -740,53 +727,84 @@ async function criarTarefa(
   const bandeiraEstado = bandeiras[estado];
 
   card.dataset.titulo = titulo;
-
   card.dataset.descricao = descricao;
-
   card.dataset.prioridade = prioridade;
-
   card.dataset.data = data;
-
   card.dataset.estado = estado;
-
   card.dataset.solicitante = solicitante;
 
   const avatarSolicitante = criarAvatarUsuario(usuarioSolicitante, "small");
 
   card.innerHTML = `
-        <span class="badge priority-${prioridade}">
-            ${nomePrioridade}
+    <span class="badge priority-${prioridade}">
+      ${nomePrioridade}
+    </span>
+
+    <h4>${titulo}</h4>
+
+    <div class="card-footer">
+
+      <span class="card-date">
+        📅 ${dataFormatada}
+      </span>
+
+      <div class="card-state">
+
+        <img
+          src="${bandeiraEstado}"
+          alt="${estado}"
+        >
+
+        <span>
+          ${estado}
         </span>
 
-        <h4>${titulo}</h4>
+      </div>
 
-        <div class="card-footer">
+      ${avatarSolicitante}
 
-            <span class="card-date">
-                📅 ${dataFormatada}
-            </span>
-
-            <div class="card-state">
-
-                <img
-                    src="${bandeiraEstado}"
-                    alt="${estado}"
-                >
-
-                <span>
-                    ${estado}
-                </span>
-
-            </div>
-
-            ${avatarSolicitante}
-
-        </div>
-    `;
+    </div>
+  `;
 
   taskList.appendChild(card);
 
   atualizarContadores();
+
+  if (status === "completed" && concluidaEm) {
+    const dataConclusao = new Date(concluidaEm.replace(" ", "T"));
+
+    const agora = new Date();
+
+    const duasHoras = 2 * 60 * 60 * 1000;
+
+    const tempoPassado = agora.getTime() - dataConclusao.getTime();
+
+    const tempoRestante = duasHoras - tempoPassado;
+
+    if (tempoRestante > 0) {
+      setTimeout(() => {
+        if (!card.isConnected) {
+          return;
+        }
+
+        if (card.dataset.status !== "completed") {
+          return;
+        }
+
+        card.classList.add("card-removendo");
+
+        setTimeout(() => {
+          if (!card.isConnected) {
+            return;
+          }
+
+          card.remove();
+
+          atualizarContadores();
+        }, 800);
+      }, tempoRestante);
+    }
+  }
 }
 
 async function atualizarStatusBanco(id, status, responsavel = "") {
@@ -1322,17 +1340,35 @@ async function abrirDetalhes(
 
       listaConcluido.appendChild(card);
 
-      await atualizarStatusBanco(
+      const resultado = await atualizarStatusBanco(
         card.dataset.id,
         "completed",
         card.dataset.responsavel,
       );
+
+      if (!resultado) {
+        console.error("Não foi possível concluir a tarefa.");
+
+        return;
+      }
 
       atualizarContadores();
 
       detailsContainer.innerHTML = "";
 
       detailsContainer.style.display = "none";
+
+      card.classList.add("card-concluido");
+
+      setTimeout(() => {
+        card.classList.add("card-removendo");
+
+        setTimeout(() => {
+          card.remove();
+
+          atualizarContadores();
+        }, 800);
+      }, 30 * 1000);
     });
   }
 

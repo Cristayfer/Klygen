@@ -684,6 +684,8 @@ def criar_tarefa():
 @app.route("/api/tarefas", methods=["GET"])
 def listar_tarefas():
 
+    from datetime import datetime, timedelta
+
     conexao = conectar()
 
     tarefas = conexao.execute("""
@@ -695,6 +697,16 @@ def listar_tarefas():
     lista_tarefas = []
 
     for tarefa in tarefas:
+
+        if tarefa["status"] == "completed" and tarefa["concluida_em"]:
+
+            concluida_em = datetime.strptime(
+                tarefa["concluida_em"],
+                "%Y-%m-%d %H:%M:%S"
+            )
+
+            if datetime.now() - concluida_em >= timedelta(hours=2):
+                continue
 
         tarefa_dict = dict(tarefa)
 
@@ -730,7 +742,6 @@ def listar_tarefas():
         "tarefas": lista_tarefas
     }
 
-
 @app.route("/api/tarefas/<int:tarefa_id>/status", methods=["PUT"])
 @login_required
 def atualizar_status(tarefa_id):
@@ -740,6 +751,7 @@ def atualizar_status(tarefa_id):
     responsavel = dados.get("responsavel", "")
 
     conexao = conectar()
+
     usuario = conexao.execute("""
         SELECT
             id,
@@ -789,10 +801,8 @@ def atualizar_status(tarefa_id):
 
     if pode_resolver:
 
-
         if status_atual == "pending" and novo_status == "progress":
             pass
-
 
         elif status_atual == "progress" and novo_status == "ready":
             pass
@@ -808,12 +818,11 @@ def atualizar_status(tarefa_id):
                 "mensagem": "Essa alteração de status não é permitida."
             }, 403
 
+
     elif eh_solicitante:
 
-  
         if status_atual == "ready" and novo_status == "completed":
             pass
-
 
         elif status_atual == "ready" and novo_status == "review":
             pass
@@ -834,18 +843,30 @@ def atualizar_status(tarefa_id):
             "mensagem": "Você não tem permissão para alterar esta tarefa."
         }, 403
 
-
     if not pode_resolver:
         responsavel = tarefa["responsavel"] or ""
 
 
+    if novo_status == "completed":
+        from datetime import datetime, timedelta
+
+        concluida_em = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+    else:
+        concluida_em = None
+
     conexao.execute("""
         UPDATE tarefas
-        SET status = ?, responsavel = ?
+        SET
+            status = ?,
+            responsavel = ?,
+            concluida_em = ?
         WHERE id = ?
     """, (
         novo_status,
         responsavel,
+        concluida_em,
         tarefa_id
     ))
 
@@ -856,7 +877,6 @@ def atualizar_status(tarefa_id):
         "sucesso": True,
         "mensagem": "Status atualizado"
     }
-
 
 @app.route("/api/usuario-logado/foto", methods=["DELETE"])
 @login_required

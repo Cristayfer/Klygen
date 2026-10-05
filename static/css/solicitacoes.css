@@ -814,3 +814,14 @@
 .arquivo-nao-visualizavel p {
   margin-bottom: 20px;
 }
+
+.card-concluido {
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.card-removendo {
+  opacity: 0;
+  transform: translateY(-8px);
+}

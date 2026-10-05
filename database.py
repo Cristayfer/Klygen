@@ -55,7 +55,8 @@ def criar_banco():
             data TEXT NOT NULL,
             solicitante TEXT NOT NULL,
             responsavel TEXT,
-            status TEXT NOT NULL DEFAULT 'pending'
+            status TEXT NOT NULL DEFAULT 'pending',
+            concluida_em TEXT
         )
     """)
 
@@ -91,7 +92,17 @@ def criar_banco():
     if "foto" not in nomes_colunas:
         conexao.execute("ALTER TABLE usuarios ADD COLUMN foto TEXT")
 
+    colunas_tarefas = conexao.execute(
+        "PRAGMA table_info(tarefas)"
+    ).fetchall()
 
+    nomes_colunas_tarefas = [
+        coluna["name"] for coluna in colunas_tarefas
+    ]
 
+    if "concluida_em" not in nomes_colunas_tarefas:
+        conexao.execute(
+            "ALTER TABLE tarefas ADD COLUMN concluida_em TEXT"
+        )
     conexao.commit()
     conexao.close()
