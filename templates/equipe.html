@@ -8,11 +8,20 @@
 
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/index.css') }}"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
     />
   </head>
 
   <body>
+    <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="logo">
         <svg
@@ -33,37 +42,35 @@
 
         <h2>KLYGEN</h2>
       </div>
-      </div>
+
       <nav>
         <ul>
           <li>
             <a href="/"> Tarefas </a>
           </li>
 
-          <li>
+          <li class="active">
             <a href="/equipe"> Equipe Fiscal </a>
           </li>
 
           <li>
-            <a href="/calculadora"> Calculadora Fiscal </a>
-          </li>
-
-          <li class="active">
-            <a href="/solicitacoes"> Solicitações </a>
+            <a href="/calculadora-fiscal" class="menu-item active">
+              Calculadora Fiscal
+            </a>
           </li>
 
           <li>
-            <a href="/configuracoes"> Configurações </a>
+            <a href="/solicitacoes"> Solicitações </a>
           </li>
         </ul>
       </nav>
     </aside>
 
     <main class="main-content">
-      <section></section>
       <header class="page-header">
-        <h1>Equipe Fiscal</h1>
-        <p>Usuários cadastrados no Klygen</p>
+        <div>
+          <h1>Equipe Fiscal</h1>
+        </div>
       </header>
 
       <section id="lista-equipe" class="equipe-lista"></section>

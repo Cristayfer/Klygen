@@ -1086,3 +1086,258 @@ textarea {
   opacity: 0;
   transform: translateY(-8px);
 }
+
+/* =========================================================
+   EQUIPE FISCAL
+   Tudo aqui fica limitado à .equipe-lista
+   ========================================================= */
+
+.equipe-lista {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+  gap: 20px;
+
+  padding: 10px 0 30px;
+}
+
+/* =========================================================
+   CARD DA EQUIPE
+   ========================================================= */
+
+.equipe-lista .usuario-card {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 16px;
+
+  padding: 24px;
+
+  min-height: 260px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* Hover */
+
+.equipe-lista .usuario-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #d7dce5;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.09);
+}
+
+/* =========================================================
+   AVATAR DA EQUIPE
+   ========================================================= */
+
+.equipe-lista .usuario-avatar {
+  width: 64px;
+  height: 64px;
+
+  min-width: 64px;
+  min-height: 64px;
+
+  max-width: 64px;
+  max-height: 64px;
+
+  border-radius: 50%;
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  margin-bottom: 14px;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  flex-shrink: 0;
+}
+
+.equipe-lista .usuario-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+/* =========================================================
+   INFORMAÇÕES DO USUÁRIO
+   ========================================================= */
+
+.equipe-lista .usuario-info {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.equipe-lista .usuario-info h3 {
+  width: 100%;
+
+  margin: 0 0 6px;
+
+  color: #172033;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   TIPO DE USUÁRIO
+   ========================================================= */
+
+.equipe-lista .usuario-tipo {
+  margin: 0 0 16px;
+
+  padding: 5px 11px;
+
+  border-radius: 999px;
+
+  background: #f1f5f9;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   RAMAL
+   ========================================================= */
+
+.equipe-lista .usuario-ramal {
+  width: 100%;
+
+  margin: 0;
+
+  padding-top: 14px;
+
+  border-top: 1px solid #eef0f4;
+
+  color: #6b7280;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.equipe-lista .usuario-status {
+  margin-top: 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.equipe-lista .usuario-status::before {
+  content: "";
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+}
+
+/* Ativo */
+
+.equipe-lista .status-ativo {
+  color: #16a34a;
+}
+
+.equipe-lista .status-ativo::before {
+  background: #22c55e;
+}
+
+/* Inativo */
+
+.equipe-lista .status-inativo {
+  color: #ef4444;
+}
+
+.equipe-lista .status-inativo::before {
+  background: #ef4444;
+}
+
+/* =========================================================
+   LISTA VAZIA
+   ========================================================= */
+
+.equipe-lista .equipe-vazia {
+  grid-column: 1 / -1;
+
+  min-height: 250px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  border: 1px dashed #d9dee8;
+
+  border-radius: 16px;
+
+  color: #8a909c;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .equipe-lista {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .equipe-lista {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
+  }
+}

@@ -898,6 +898,10 @@ def remover_foto_perfil():
         "mensagem": "Foto removida com sucesso."
     }
 
+@app.route("/calculadora-fiscal")
+@login_required
+def calculadora_fiscal():
+    return render_template("calculadora.html")
 
 if __name__ == "__main__":
     criar_banco()

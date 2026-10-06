@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Calculadora Fiscal | Klygen</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #f3f4f6;
+        font-family: "Inter", sans-serif;
+        color: #172033;
+      }
+
+      .calculadora-container {
+        width: 100%;
+        max-width: 850px;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .calculadora-container h1 {
+        font-size: 30px;
+        margin-bottom: 12px;
+        color: #172033;
+      }
+
+      .calculadora-container p {
+        font-size: 15px;
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+
+      .gif-container {
+        width: 100%;
+        max-width: 364px;
+        height: 374px;
+
+        margin: 0 auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: white;
+        border-radius: 18px;
+
+        border: 1px solid #e5e7eb;
+
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+
+        overflow: hidden;
+      }
+
+      .gif-container span {
+        color: #9ca3af;
+        font-size: 14px;
+      }
+
+      .gif-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .em-breve {
+        display: inline-block;
+
+        margin-top: 25px;
+        padding: 8px 16px;
+
+        background: #dbeafe;
+        color: #2563eb;
+
+        border-radius: 999px;
+
+        font-size: 13px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="calculadora-container">
+      <h1>Calculadora Fiscal</h1>
+
+      <p>
+        Em desenvolvimento ainda...<br />
+        Pode voltar pra trás curioso, tem nada aqui ainda não...<br />
+        Crisão ta cansado
+      </p>
+
+      <div class="gif-container">
+        <img src="{{ url_for('static', filename='img/gatitos.gif') }}" />
+      </div>
+    </main>
+  </body>
+</html>
