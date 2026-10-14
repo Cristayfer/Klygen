@@ -4,12 +4,12 @@ from functools import wraps
 from database import criar_banco, conectar, criar_usuario
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 
-
-
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "klygen-chave-secreta"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 PASTA_PERFIS = os.path.join(
 app.static_folder,
