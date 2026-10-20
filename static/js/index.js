@@ -1800,4 +1800,16 @@ function formatarData(data) {
   return `${dia} ${meses[mes] || mes}`;
 }
 
+function atualizarMenuAtivo() {
+  const caminhoAtual = window.location.pathname.replace(/\/+$/, "") || "/";
+  const links = document.querySelectorAll(".sidebar nav a");
+
+  links.forEach((link) => {
+    const caminhoLink = new URL(link.href).pathname.replace(/\/+$/, "") || "/";
+    link.classList.toggle("active", caminhoLink === caminhoAtual);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", atualizarMenuAtivo);
+
 carregarTarefas();
