@@ -681,6 +681,170 @@ def criar_tarefa():
         "tarefa_id": tarefa_id
     }
 
+
+@app.route("/api/tarefas/<int:tarefa_id>", methods=["PUT"])
+@login_required
+def editar_tarefa(tarefa_id):
+    titulo = request.form.get("titulo", "").strip()
+    descricao = request.form.get("descricao", "").strip()
+    prioridade = request.form.get("prioridade", "")
+    estado = request.form.get("estado", "")
+    data = request.form.get("data", "")
+
+    if not titulo or not prioridade or not estado or not data:
+        return {
+            "sucesso": False,
+            "mensagem": "Preencha todos os campos obrigatórios."
+        }, 400
+
+    if prioridade not in ("high", "medium", "low"):
+        return {
+            "sucesso": False,
+            "mensagem": "Prioridade inválida."
+        }, 400
+
+    if estado not in ("MG", "BA", "PE", "ES"):
+        return {
+            "sucesso": False,
+            "mensagem": "Estado inválido."
+        }, 400
+
+    conexao = conectar()
+
+    try:
+        usuario = conexao.execute("""
+            SELECT usuario, administrador
+            FROM usuarios
+            WHERE id = ?
+        """, (session["usuario_id"],)).fetchone()
+
+        if not usuario:
+            return {
+                "sucesso": False,
+                "mensagem": "Usuário não encontrado."
+            }, 404
+
+        tarefa = conexao.execute("""
+            SELECT id, solicitante, status
+            FROM tarefas
+            WHERE id = ?
+        """, (tarefa_id,)).fetchone()
+
+        if not tarefa:
+            return {
+                "sucesso": False,
+                "mensagem": "Tarefa não encontrada."
+            }, 404
+
+    
+        if tarefa["status"] != "pending":
+            return {
+                "sucesso": False,
+                "mensagem": "Só é possível editar tarefas pendentes."
+            }, 400
+
+        eh_solicitante = tarefa["solicitante"] == usuario["usuario"]
+
+        if not eh_solicitante and not usuario["administrador"]:
+            return {
+                "sucesso": False,
+                "mensagem": "Você não tem permissão para editar esta tarefa."
+            }, 403
+
+        conexao.execute("""
+            UPDATE tarefas
+            SET
+                titulo = ?,
+                descricao = ?,
+                prioridade = ?,
+                estado = ?,
+                data = ?
+            WHERE id = ?
+        """, (
+            titulo,
+            descricao,
+            prioridade,
+            estado,
+            data,
+            tarefa_id
+        ))
+
+        # Adiciona novos anexos sem excluir os anteriores.
+        arquivos = request.files.getlist("anexo")
+
+        extensoes_permitidas = {
+            "png", "jpg", "jpeg", "pdf", "xlsx", "xls"
+        }
+
+        for arquivo in arquivos:
+            if not arquivo or not arquivo.filename:
+                continue
+
+            nome_original = arquivo.filename
+            nome_seguro = secure_filename(nome_original)
+
+            if not nome_seguro:
+                continue
+
+            extensao = nome_seguro.rsplit(".", 1)[-1].lower() \
+                if "." in nome_seguro else ""
+
+            if extensao not in extensoes_permitidas:
+                return {
+                    "sucesso": False,
+                    "mensagem": f"Tipo de arquivo não permitido: {nome_original}"
+                }, 400
+
+            nome_arquivo = f"tarefa_{tarefa_id}_{nome_seguro}"
+
+            caminho = os.path.join(PASTA_ANEXOS, nome_arquivo)
+
+            # Evita sobrescrever um arquivo existente com o mesmo nome.
+            if os.path.exists(caminho):
+                base, ext = os.path.splitext(nome_seguro)
+                nome_arquivo = f"tarefa_{tarefa_id}_{base}_{__import__('uuid').uuid4().hex[:8]}{ext}"
+                caminho = os.path.join(PASTA_ANEXOS, nome_arquivo)
+
+            arquivo.save(caminho)
+
+            caminho_banco = f"/static/uploads/tarefas/{nome_arquivo}"
+
+            conexao.execute("""
+                INSERT INTO anexos (
+                    tarefa_id,
+                    nome_original,
+                    nome_arquivo,
+                    caminho
+                )
+                VALUES (?, ?, ?, ?)
+            """, (
+                tarefa_id,
+                nome_original,
+                nome_arquivo,
+                caminho_banco
+            ))
+
+        conexao.commit()
+
+        return {
+            "sucesso": True,
+            "mensagem": "Solicitação atualizada com sucesso.",
+            "id": tarefa_id
+        }
+
+    except Exception:
+        conexao.rollback()
+        app.logger.exception("Erro ao editar tarefa %s", tarefa_id)
+
+        return {
+            "sucesso": False,
+            "mensagem": "Ocorreu um erro ao editar a solicitação."
+        }, 500
+
+    finally:
+        conexao.close()
+
+
 @app.route("/api/tarefas", methods=["GET"])
 def listar_tarefas():
 

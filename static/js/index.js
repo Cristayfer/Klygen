@@ -698,17 +698,18 @@ async function criarTarefa(
   card.dataset.status = status;
   card.dataset.responsavel = responsavel;
   card.dataset.concluidaEm = concluidaEm || "";
+  card._arquivos = arquivos || [];
 
   card.addEventListener("click", () => {
     abrirDetalhes(
       card,
-      titulo,
-      descricao,
-      prioridade,
-      estado,
-      data,
-      solicitante,
-      arquivos,
+      card.dataset.titulo,
+      card.dataset.descricao,
+      card.dataset.prioridade,
+      card.dataset.estado,
+      card.dataset.data,
+      card.dataset.solicitante,
+      card._arquivos || [],
     );
   });
 
@@ -732,6 +733,7 @@ async function criarTarefa(
   card.dataset.data = data;
   card.dataset.estado = estado;
   card.dataset.solicitante = solicitante;
+  card._arquivos = arquivos || [];
 
   const avatarSolicitante = criarAvatarUsuario(usuarioSolicitante, "small");
 
@@ -841,6 +843,230 @@ async function atualizarStatusBanco(id, status, responsavel = "") {
   }
 }
 
+async function editarTarefaCard(card, fecharDetalhes) {
+  const modalContainer = document.getElementById("modal-container");
+
+  try {
+    const resposta = await fetch("/nova-tarefa");
+
+    if (!resposta.ok) {
+      throw new Error("Não foi possível carregar o formulário.");
+    }
+
+    modalContainer.innerHTML = await resposta.text();
+
+    const formulario = document.getElementById("task-form");
+
+    if (!formulario) {
+      throw new Error("Formulário de tarefa não encontrado.");
+    }
+
+    const campoTitulo = document.getElementById("titulo");
+    const campoDescricao = document.getElementById("descricao");
+    const campoPrioridade = document.getElementById("prioridade");
+    const campoEstado = document.getElementById("estado");
+    const campoData = document.getElementById("data");
+    const campoSolicitante = document.getElementById("solicitante");
+
+    if (campoTitulo) campoTitulo.value = card.dataset.titulo || "";
+    if (campoDescricao) campoDescricao.value = card.dataset.descricao || "";
+    if (campoPrioridade) campoPrioridade.value = card.dataset.prioridade || "";
+    if (campoEstado) campoEstado.value = card.dataset.estado || "";
+    if (campoData) campoData.value = card.dataset.data || "";
+
+    if (campoSolicitante) {
+      campoSolicitante.value = card.dataset.solicitante || "";
+    }
+
+    const botaoCancelar = document.getElementById("cancelar");
+
+    if (botaoCancelar) {
+      botaoCancelar.addEventListener("click", () => {
+        modalContainer.innerHTML = "";
+      });
+    }
+
+    // Mantém os anexos existentes e permite adicionar novos.
+    const anexosExistentes = card._arquivos || [];
+    const inputAnexo = document.getElementById("anexo");
+    const listaArquivos = document.getElementById("lista-arquivos");
+    const arquivosSelecionados = [];
+
+    function atualizarListaArquivos() {
+      if (!listaArquivos) return;
+
+      listaArquivos.innerHTML = "";
+
+      arquivosSelecionados.forEach((arquivo, indice) => {
+        const item = document.createElement("div");
+        item.className = "arquivo-selecionado";
+
+        const nome = document.createElement("span");
+        nome.className = "arquivo-nome";
+        nome.textContent = arquivo.name;
+
+        const remover = document.createElement("button");
+        remover.type = "button";
+        remover.className = "remover-arquivo";
+        remover.textContent = "×";
+        remover.title = "Remover arquivo selecionado";
+
+        remover.addEventListener("click", () => {
+          arquivosSelecionados.splice(indice, 1);
+          atualizarListaArquivos();
+        });
+
+        item.append(nome, remover);
+        listaArquivos.appendChild(item);
+      });
+    }
+
+    if (inputAnexo) {
+      inputAnexo.addEventListener("change", () => {
+        for (const arquivo of Array.from(inputAnexo.files)) {
+          const duplicado = arquivosSelecionados.some(
+            (existente) =>
+              existente.name === arquivo.name &&
+              existente.size === arquivo.size &&
+              existente.lastModified === arquivo.lastModified,
+          );
+
+          if (!duplicado) arquivosSelecionados.push(arquivo);
+        }
+
+        inputAnexo.value = "";
+        atualizarListaArquivos();
+      });
+    }
+
+    formulario.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const titulo = campoTitulo?.value.trim() || "";
+      const descricao = campoDescricao?.value.trim() || "";
+      const prioridade = campoPrioridade?.value || "";
+      const estado = campoEstado?.value || "";
+      const data = campoData?.value || "";
+
+      if (!titulo || !prioridade || !estado || !data) {
+        alert("Preencha todos os campos obrigatórios.");
+        return;
+      }
+
+      const formData = new FormData();
+
+      formData.append("titulo", titulo);
+      formData.append("descricao", descricao);
+      formData.append("prioridade", prioridade);
+      formData.append("estado", estado);
+      formData.append("data", data);
+
+      arquivosSelecionados.forEach((arquivo) => {
+        formData.append("anexo", arquivo);
+      });
+
+      try {
+        const resposta = await fetch(`/api/tarefas/${card.dataset.id}`, {
+          method: "PUT",
+          body: formData,
+        });
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok || !resultado.sucesso) {
+          alert(resultado.mensagem || "Não foi possível editar a solicitação.");
+          return;
+        }
+
+        // Busca novamente a tarefa para obter os anexos atualizados.
+        const respostaTarefas = await fetch("/api/tarefas");
+
+        if (!respostaTarefas.ok) {
+          throw new Error("Não foi possível atualizar os dados da tarefa.");
+        }
+
+        const dadosTarefas = await respostaTarefas.json();
+        const tarefaAtualizada = dadosTarefas.tarefas.find(
+          (tarefa) => String(tarefa.id) === String(card.dataset.id),
+        );
+
+        if (tarefaAtualizada) {
+          atualizarCardExistente(card, tarefaAtualizada);
+        }
+
+        modalContainer.innerHTML = "";
+        fecharDetalhes();
+      } catch (erro) {
+        console.error("ERRO AO EDITAR TAREFA:", erro);
+        alert("Ocorreu um erro ao salvar as alterações.");
+      }
+    });
+  } catch (erro) {
+    console.error("ERRO AO ABRIR EDIÇÃO:", erro);
+    alert("Não foi possível abrir o formulário de edição.");
+  }
+}
+
+function atualizarCardExistente(card, tarefa) {
+  card.dataset.titulo = tarefa.titulo;
+  card.dataset.descricao = tarefa.descricao || "";
+  card.dataset.prioridade = tarefa.prioridade;
+  card.dataset.estado = tarefa.estado;
+  card.dataset.data = tarefa.data;
+  card.dataset.solicitante = tarefa.solicitante;
+  card._arquivos = tarefa.anexos || [];
+
+  card.className = `card priority-${tarefa.prioridade}`;
+
+  const prioridades = {
+    high: "Alta",
+    medium: "Média",
+    low: "Baixa",
+  };
+
+  card.innerHTML = `
+    <span class="badge priority-${tarefa.prioridade}">
+      ${prioridades[tarefa.prioridade] || ""}
+    </span>
+
+    <h4></h4>
+
+    <div class="card-footer">
+      <span class="card-date"></span>
+
+      <div class="card-state">
+        <img alt="">
+        <span></span>
+      </div>
+
+      ${criarAvatarUsuario(usuarioLogado, "small")}
+    </div>
+  `;
+
+  card.querySelector("h4").textContent = tarefa.titulo;
+  card.querySelector(".card-date").textContent =
+    `📅 ${formatarData(tarefa.data)}`;
+
+  const imagem = card.querySelector(".card-state img");
+  imagem.src = bandeiras[tarefa.estado];
+  imagem.alt = tarefa.estado;
+
+  card.querySelector(".card-state span").textContent = tarefa.estado;
+
+  card.onclick = () => {
+    abrirDetalhes(
+      card,
+      card.dataset.titulo,
+      card.dataset.descricao,
+      card.dataset.prioridade,
+      card.dataset.estado,
+      card.dataset.data,
+      card.dataset.solicitante,
+      card._arquivos,
+    );
+  };
+}
+
 async function abrirDetalhes(
   card,
   titulo,
@@ -858,6 +1084,60 @@ async function abrirDetalhes(
   const responsavel = card.dataset.responsavel || "";
 
   const usuarioSolicitante = await buscarUsuario(solicitante);
+
+  function atualizarDadosDoCard(
+    card,
+    titulo,
+    descricao,
+    prioridade,
+    data,
+    estado,
+    solicitante,
+    arquivos,
+  ) {
+    card.dataset.titulo = titulo;
+    card.dataset.descricao = descricao;
+    card.dataset.prioridade = prioridade;
+    card.dataset.data = data;
+    card.dataset.estado = estado;
+    card.dataset.solicitante = solicitante;
+
+    card.className = `card priority-${prioridade}`;
+
+    card.querySelector("h4").textContent = titulo;
+
+    const badge = card.querySelector(".badge");
+    badge.className = `badge priority-${prioridade}`;
+
+    badge.textContent =
+      prioridade === "high"
+        ? "Alta"
+        : prioridade === "medium"
+          ? "Média"
+          : "Baixa";
+
+    card.querySelector(".card-date").textContent = `📅 ${formatarData(data)}`;
+
+    const imagemEstado = card.querySelector(".card-state img");
+    imagemEstado.src = bandeiras[estado];
+    imagemEstado.alt = estado;
+
+    card.querySelector(".card-state span").textContent = estado;
+
+    // Atualiza os dados usados quando o card for aberto.
+    card.onclick = () => {
+      abrirDetalhes(
+        card,
+        titulo,
+        descricao,
+        prioridade,
+        estado,
+        data,
+        solicitante,
+        arquivos,
+      );
+    };
+  }
 
   const usuarioResponsavel = responsavel
     ? await buscarUsuario(responsavel)
@@ -1169,6 +1449,20 @@ async function abrirDetalhes(
                         : ""
                     }
 
+                    ${
+                      card.dataset.status === "pending" &&
+                      (ehSolicitante || usuarioLogado?.administrador)
+                        ? `
+                          <button
+                              id="editar-tarefa"
+                              class="btn-editar"
+                          >
+                              Editar Solicitação
+                          </button>
+                        `
+                        : ""
+                    }
+
 
                     ${
                       card.dataset.status === "progress" && podeResolver
@@ -1233,6 +1527,20 @@ async function abrirDetalhes(
       detailsContainer.innerHTML = "";
 
       detailsContainer.style.display = "none";
+    });
+  }
+
+  const editar = document.getElementById("editar-tarefa");
+
+  if (editar) {
+    editar.addEventListener("click", () => {
+      detailsContainer.innerHTML = "";
+      detailsContainer.style.display = "none";
+
+      editarTarefaCard(card, () => {
+        detailsContainer.innerHTML = "";
+        detailsContainer.style.display = "none";
+      });
     });
   }
 

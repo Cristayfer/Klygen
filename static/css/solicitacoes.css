@@ -4,6 +4,7 @@
   padding: 40px 50px;
   background: #f5f7fb;
   color: #182230;
+  overflow-y: auto;
 }
 /* CABEÇALHO */
 .solicitacoes-header {

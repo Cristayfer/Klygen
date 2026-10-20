@@ -12,7 +12,12 @@ body {
 
 .sidebar {
   width: 250px;
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   color: white;
   padding: 30px;
 }
@@ -107,7 +112,12 @@ main {
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
 }
 .btn-add {
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   color: white;
   border: none;
   padding: 12px 20px;
@@ -408,8 +418,8 @@ main {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #1769e8;
-  color: white;
+  background: #f2f4f7;
+  color: rgb(28, 47, 216);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -539,7 +549,12 @@ textarea {
 }
 
 .btn-create {
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   color: white;
   border: none;
   padding: 12px 20px;
@@ -791,13 +806,42 @@ textarea {
   border: none;
   padding: 11px 20px;
   border-radius: 8px;
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   color: white;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
 }
+
+.btn-editar {
+  border-color: #c0031d;
+  padding: 11px 20px;
+  border-radius: 8px;
+  background: white;
+  color: #c0031d;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2 ease;
+}
+
+.btn-editar:hover {
+  border-color: #c0031d;
+  background: linear-gradient(
+    to bottom right,
+    #a51b1b 0%,
+    #920e0e 50%,
+    #910d0d 100%
+  );
+  color: white;
+}
+
 .btn-review {
   border: none;
   padding: 11px 20px;
@@ -811,7 +855,12 @@ textarea {
 }
 
 .btn-assume:hover {
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
 }
 
 .perfil-overlay {
