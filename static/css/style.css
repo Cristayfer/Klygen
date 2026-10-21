@@ -196,6 +196,12 @@ main {
   cursor: pointer;
   transition: 0.2s ease;
 }
+
+.btn-add:hover {
+  transition: 0.2s ease;
+  box-shadow: inset 3px 0 0 #16d6c8;
+}
+
 .user {
   font-weight: bold;
   background: #dbeafe;

@@ -7,7 +7,12 @@ main {
 
 body {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +21,7 @@ body {
 /* ---------------- CONTAINER ---------------- */
 .cadastro-container {
   width: 100%;
-  min-height: 100vh;
+  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +107,12 @@ body {
   height: 46px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
@@ -111,7 +121,12 @@ body {
 }
 
 .cadastro-card button {
-  background: linear-gradient(to bottom, #151592 0%, #05054b 50%, #043f52 100%);
+  background: linear-gradient(
+    to bottom right,
+    #0583d8 0%,
+    #1254b8 50%,
+    #150ab1 100%
+  );
   transform: translateY(-1px);
 }
 
