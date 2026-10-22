@@ -19,6 +19,8 @@ Klygen é um projeto de gerenciamento de tarefas inspirado em ferramentas como T
 - API com Flask
 - Responsividade
 - Login de usuários
+- Revisão de tarefas já concluídas
+- Utilitários para os usúarios
 
 ## 🎯 Objetivo
 
@@ -27,5 +29,7 @@ Este projeto faz parte do meu portifólio de desenvolvimento e será evoluído c
 ## 📅 Próximas implementações
 
 - Calculadora fiscal
-- Revisão de tarefas já concluídas
 - Configurações para o perfil dos usuários
+- Leitor de XML de notas fiscais
+- Tela de liberação de cadastro de produtos
+- Lista de consulta de tributação de produtos
